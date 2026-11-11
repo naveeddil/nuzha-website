@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="description" content="Nuzha Restaurant — traditional Saudi hospitality and generous feasts in Al Nairyah.">
+  <title>Nuzha Restaurant | Al Nairyah</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Alexandria:wght@300;400;500;600;700&family=DM+Sans:wght@400;500;600&family=Fraunces:opsz,wght@9..144,600;9..144,700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+  <script defer src="app.js"></script>
+</head>
+<body>
+  <header class="site-header">
+    <a class="brand" href="#home" aria-label="Nuzha Restaurant home"><img src="assets/logo.png" alt="Nuzha Restaurant"><span>Nuzha <small>مطعم النزهة</small></span></a>
+    <button class="menu-toggle" aria-label="Open navigation" aria-expanded="false">☰</button>
+    <nav aria-label="Main navigation">
+      <a href="#home" data-t="navHome">Home</a><a href="#about" data-t="navAbout">About</a><a href="#menu" data-t="navMenu">Menu</a><a href="#stories" data-t="navStories">Stories</a><a href="#contact" data-t="navContact">Contact</a>
+    </nav>
+    <div class="header-actions"><button id="themeBtn" class="icon-btn" aria-label="Change color theme">◐</button><button id="langBtn" class="lang-btn">العربية</button><a class="whatsapp small" href="https://wa.me/966530035292" target="_blank" rel="noreferrer"><span data-t="order">Order now</span> ↗</a></div>
+  </header>
+
+  <main>
+    <section id="home" class="hero">
+      <div class="hero-photo"><img src="assets/hero.jpg" alt="A generous Nuzha feast with rice and roasted meats"><div class="seal">من قلب<br>النعيرية</div></div>
+      <div class="hero-copy reveal">
+        <p class="eyebrow" data-t="eyebrow">AL NAIRYAH · SAUDI ARABIA</p>
+        <h1><span data-t="heroOne">Gather around.</span><br><em data-t="heroTwo">Feast generously.</em></h1>
+        <p class="lede" data-t="heroText">Traditional flavours, slow-cooked meats and abundant platters made for the people you love.</p>
+        <div class="hero-actions"><a class="button" href="#menu" data-t="explore">Explore the menu</a><a class="text-link" href="#about"><span data-t="ourStory">Our story</span> ↓</a></div>
+        <div class="service-strip"><span><b>Every day</b><small data-t="hours">6 AM — 12 AM</small></span><span><b data-t="location">Al Nairyah</b><small data-t="eastern">Eastern Province</small></span><span><b data-t="family">Family feasts</b><small data-t="bigSmall">Big or small</small></span></div>
+      </div>
+    </section>
+
+    <section class="marquee" aria-label="Nuzha highlights"><div>كبسة أصيلة ✦ GENEROUS PLATTERS ✦ نكهة لا تنسى ✦ SAUDI HOSPITALITY ✦ &nbsp;</div></section>
+
+    <section id="about" class="story section-pad">
+      <div class="story-copy reveal"><p class="eyebrow" data-t="since">OUR DELICIOUS STORY</p><h2 data-t="storyTitle">Food that brings everyone to the table.</h2><p data-t="storyText">At Nuzha, every platter begins with fragrant rice, carefully selected ingredients and the patience good cooking deserves. We serve familiar flavours with warmth, abundance and a distinctly local spirit.</p><div class="signature">نزهة <span data-t="kitchen">The Nuzha kitchen</span></div></div>
+      <div class="story-collage reveal"><img class="story-main" src="assets/story.jpg" alt="Nuzha kitchen and dining story"><img class="story-float" src="assets/grill.jpg" alt="Freshly prepared grilled food"><div class="pepper">✦</div></div>
+    </section>
+
+    <section id="menu" class="menu-section section-pad">
+      <div class="section-head reveal"><div><p class="eyebrow" data-t="menuEyebrow">FROM OUR KITCHEN</p><h2 data-t="menuTitle">The feast starts here.</h2></div><p data-t="menuIntro">A visual selection of Nuzha favourites. Contact us for today’s full menu and current prices.</p></div>
+      <div class="filters" id="filters"></div><div class="menu-grid" id="menuGrid"></div>
+      <div class="menu-note"><span data-t="menuNote">Planning a gathering?</span><a href="https://wa.me/966530035292" target="_blank" rel="noreferrer" data-t="askPlatter">Ask us about large platters →</a></div>
+    </section>
+
+    <section class="feature-feast">
+      <img src="assets/feast.jpg" alt="A signature Nuzha feast platter"><div class="feature-overlay reveal"><p class="eyebrow" data-t="signature">SIGNATURE EXPERIENCE</p><h2 data-t="tableTitle">One table.<br>A hundred stories.</h2><p data-t="tableText">Our grand platters are prepared for celebrations, family weekends and the simple joy of sharing.</p><a class="button light" href="https://wa.me/966530035292" target="_blank" rel="noreferrer" data-t="planFeast">Plan your feast</a></div>
+    </section>
+
+    <section id="stories" class="stories section-pad">
+      <div class="section-head"><div><p class="eyebrow" data-t="voices">GUEST NOTES</p><h2 data-t="loveTitle">Made to be remembered.</h2></div><p class="sample-label" data-t="sampleLabel">Sample feedback — replace with verified guest reviews in Admin.</p></div>
+      <div class="quote-track" id="quoteTrack"></div>
+      <div class="journal-head"><p class="eyebrow" data-t="journal">FROM THE JOURNAL</p><h2 data-t="journalTitle">At the Nuzha table</h2></div><div class="journal-grid" id="journalGrid"></div>
+    </section>
+
+    <section id="contact" class="contact section-pad">
+      <div class="contact-copy reveal"><p class="eyebrow" data-t="visit">COME VISIT</p><h2 data-t="hungry">Hungry yet?</h2><p data-t="contactText">We’re ready to welcome you in Al Nairyah. Call ahead for large orders and family gatherings.</p><div class="contact-list"><a href="tel:+966133731664"><small data-t="call">CALL US</small>013 373 1664</a><a href="https://wa.me/966530035292"><small>WHATSAPP</small>053 003 5292</a><a href="tel:+966500638543"><small data-t="mobile">MOBILE</small>050 063 8543</a></div></div>
+      <div class="contact-card reveal"><span class="pin">⌖</span><p data-t="find">FIND US IN</p><h3 data-t="nairyah">Al Nairyah</h3><span data-t="province">Eastern Province, Saudi Arabia</span><a class="text-link" href="https://maps.google.com/?q=Al+Nairyah+Saudi+Arabia" target="_blank" rel="noreferrer"><span data-t="directions">Get directions</span> ↗</a></div>
+    </section>
+  </main>
+
+  <footer><a class="brand footer-brand" href="#home"><img src="assets/logo.png" alt=""><span>Nuzha <small>مطعم النزهة</small></span></a><p data-t="footer">Generous food. Genuine hospitality.</p><button id="adminBtn" class="admin-link">Admin</button><span>© 2026 Nuzha Restaurant</span></footer>
+
+  <dialog id="adminDialog"><form method="dialog" class="admin-shell"><header><div><small>NUZHA CMS</small><h2 data-t="adminTitle">Little Admin Panel</h2></div><button class="close-admin" value="cancel" aria-label="Close">×</button></header><p class="admin-info" data-t="adminInfo">Edits are saved in this browser. Export a backup to move them to another device.</p><div class="admin-tabs"><button type="button" data-tab="menu" class="active">Menu</button><button type="button" data-tab="reviews">Reviews</button><button type="button" data-tab="settings">Settings</button></div><div id="adminContent"></div><div class="admin-actions"><button type="button" id="resetData" class="ghost danger">Reset</button><button type="button" id="exportData" class="ghost">Export JSON</button><label class="ghost import">Import JSON<input id="importData" type="file" accept="application/json"></label><button type="button" id="saveData" class="button">Save changes</button></div></form></dialog>
+</body>
+</html>
