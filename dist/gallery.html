@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="description" content="Explore food, feasts and kitchen moments from Nuzha Restaurant in Al Nairyah.">
+  <title>Gallery | Nuzha Restaurant</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Alexandria:wght@300;400;500;600;700&family=DM+Sans:wght@400;500;600&family=Fraunces:opsz,wght@9..144,600;9..144,700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css"><link rel="stylesheet" href="gallery.css">
+  <script defer src="gallery-data.js"></script><script defer src="gallery.js"></script>
+</head>
+<body class="gallery-page">
+  <header class="site-header">
+    <a class="brand" href="index.html"><img src="assets/logo.png" alt="Nuzha Restaurant"><span>Nuzha <small>مطعم النزهة</small></span></a>
+    <button class="menu-toggle" aria-label="Open navigation" aria-expanded="false">☰</button>
+    <nav aria-label="Main navigation"><a href="index.html" data-en="Home" data-ar="الرئيسية">Home</a><a href="index.html#about" data-en="About" data-ar="من نحن">About</a><a href="index.html#menu" data-en="Menu" data-ar="القائمة">Menu</a><a href="gallery.html" class="active" data-en="Gallery" data-ar="معرض الصور">Gallery</a><a href="index.html#contact" data-en="Contact" data-ar="اتصل بنا">Contact</a></nav>
+    <div class="header-actions"><button id="themeBtn" class="icon-btn" aria-label="Change color theme">◐</button><button id="langBtn" class="lang-btn">العربية</button><a class="whatsapp small" href="https://wa.me/966530035292" target="_blank" rel="noreferrer"><span data-en="Order now" data-ar="اطلب الآن">Order now</span> ↗</a></div>
+  </header>
+  <main>
+    <section class="gallery-hero"><div><p class="eyebrow" data-en="A GLIMPSE OF NUZHA" data-ar="لمحة من النزهة">A GLIMPSE OF NUZHA</p><h1 data-en="A feast for the eyes." data-ar="وليمة للعين.">A feast for the eyes.</h1><p data-en="From abundant family tables to the quiet craft behind every dish—this is Nuzha in pictures." data-ar="من موائد العائلة العامرة إلى الحِرفة الهادئة وراء كل طبق — هذه هي النزهة بالصور.">From abundant family tables to the quiet craft behind every dish—this is Nuzha in pictures.</p></div><div class="gallery-hero-mark">صور<br><span>NUZHA</span></div></section>
+    <section class="gallery-wrap">
+      <div class="gallery-toolbar"><div id="galleryFilters" class="filters"></div><a class="google-gallery" href="https://www.google.com/maps/search/?api=1&query=Nuzha+Restaurant+Nairyah+Saudi+Arabia" target="_blank" rel="noreferrer"><span data-en="See customer photos on Google" data-ar="شاهد صور العملاء على جوجل">See customer photos on Google</span> ↗</a></div>
+      <div id="galleryGrid" class="gallery-grid" aria-live="polite"></div>
+      <div id="emptyGallery" class="gallery-empty" hidden><h2 data-en="More moments are coming." data-ar="المزيد من اللحظات قريباً.">More moments are coming.</h2></div>
+    </section>
+  </main>
+  <footer><a class="brand footer-brand" href="index.html"><img src="assets/logo.png" alt=""><span>Nuzha <small>مطعم النزهة</small></span></a><p data-en="Generous food. Genuine hospitality." data-ar="طعام كريم. ضيافة أصيلة.">Generous food. Genuine hospitality.</p><a href="index.html#contact" data-en="Visit Nuzha" data-ar="زوروا النزهة">Visit Nuzha</a><span>© 2026 Nuzha Restaurant</span></footer>
+  <dialog id="lightbox"><button id="lightboxClose" aria-label="Close">×</button><button id="lightboxPrev" class="lightbox-nav" aria-label="Previous">‹</button><figure><img id="lightboxImage" alt=""><figcaption id="lightboxCaption"></figcaption></figure><button id="lightboxNext" class="lightbox-nav" aria-label="Next">›</button></dialog>
+</body>
+</html>
