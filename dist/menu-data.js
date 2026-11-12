@@ -1,0 +1,12 @@
+window.NUZHA_MENU = [
+  {category:"feasts",nameEn:"Nuzha celebration platter",nameAr:"صحن النزهة للمناسبات",descEn:"A generous whole-lamb and rice platter for large gatherings.",descAr:"صحن خروف وأرز سخي للمناسبات والتجمعات الكبيرة.",price:"—",image:"gallery-images/feasts--whole-lamb-platter.png"},
+  {category:"feasts",nameEn:"Grand family feast",nameAr:"وليمة العائلة الكبرى",descEn:"Fragrant rice with a generous selection of slow-cooked meats.",descAr:"أرز عطري مع تشكيلة سخية من اللحوم المطهوة على مهل.",price:"—",image:"assets/hero-clean.png"},
+  {category:"rice",nameEn:"Family lamb platter",nameAr:"صحن لحم عائلي",descEn:"Tender lamb served over seasoned basmati rice.",descAr:"لحم طري يقدم فوق أرز بسمتي متبل.",price:"—",image:"assets/rice-clean.png"},
+  {category:"seafood",nameEn:"Whole fried fish",nameAr:"سمك مقلي كامل",descEn:"Golden fried fish served crisp with fresh lemon.",descAr:"سمك مقلي ذهبي ومقرمش يقدم مع الليمون الطازج.",price:"—",image:"gallery-images/dishes--fried-fish.png"},
+  {category:"bbq",nameEn:"Mixed kebabs",nameAr:"مشاوي مشكلة",descEn:"Chicken and meat kebabs with bread, herbs and onion.",descAr:"كباب دجاج ولحم مع الخبز والأعشاب والبصل.",price:"—",image:"gallery-images/bbq--mixed-kebabs.jpg"},
+  {category:"bbq",nameEn:"Fire-grilled chicken",nameAr:"دجاج مشوي على الفحم",descEn:"Juicy chicken seasoned in the Nuzha style and grilled over fire.",descAr:"دجاج طري بتتبيلة النزهة ومشوي على الفحم.",price:"—",image:"assets/grill.jpg"},
+  {category:"salads",nameEn:"Fresh tabbouleh",nameAr:"تبولة طازجة",descEn:"Finely chopped parsley, tomato and bulgur with a bright lemon dressing.",descAr:"بقدونس وطماطم وبرغل مفروم مع تتبيلة الليمون المنعشة.",price:"—",image:"gallery-images/salads--tabbouleh.png"},
+  {category:"salads",nameEn:"Crisp fattoush",nameAr:"فتوش مقرمش",descEn:"Fresh vegetables, herbs and toasted bread with tangy dressing.",descAr:"خضروات وأعشاب طازجة مع الخبز المحمص والتتبيلة الحامضة.",price:"—",image:"gallery-images/salads--fattoush.png"},
+  {category:"salads",nameEn:"Mezze selection",nameAr:"تشكيلة مقبلات",descEn:"Hummus, eggplant dip, stuffed vine leaves and fresh salads.",descAr:"حمص ومتبل وورق عنب وسلطات طازجة.",price:"—",image:"gallery-images/salads--mezze-platter.jpg"},
+  {category:"kitchen",nameEn:"Nuzha moussaka",nameAr:"مسقعة النزهة",descEn:"A comforting kitchen dish of eggplant, potato and herbs.",descAr:"طبق شهي من الباذنجان والبطاطس والأعشاب.",price:"—",image:"gallery-images/kitchen--moussaka.png"}
+];
