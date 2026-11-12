@@ -12,5 +12,8 @@ window.NUZHA_GALLERY = [
   {src:"gallery-images/kitchen--moussaka.png",category:"kitchen",titleEn:"Kitchen moussaka",titleAr:"مسقعة من المطبخ"},
   {src:"gallery-images/salads--fattoush.png",category:"salads",titleEn:"Crisp fattoush",titleAr:"فتوش مقرمش"},
   {src:"gallery-images/salads--mezze-platter.jpg",category:"salads",titleEn:"Mezze and salads",titleAr:"مقبلات وسلطات"},
-  {src:"gallery-images/bbq--mixed-kebabs.jpg",category:"bbq",titleEn:"Mixed kebabs",titleAr:"مشاوي مشكلة"}
+  {src:"gallery-images/bbq--mixed-kebabs.jpg",category:"bbq",titleEn:"Mixed kebabs",titleAr:"مشاوي مشكلة"},
+  {src:"gallery-images/feasts--traditional-lamb-rice.jpg",category:"feasts",titleEn:"Traditional lamb and rice",titleAr:"لحم وأرز على الطريقة التقليدية"},
+  {src:"gallery-images/dishes--crispy-whole-fish.png",category:"dishes",titleEn:"Crispy whole fish",titleAr:"سمك كامل مقرمش"},
+  {src:"gallery-images/bbq--grill-selection.png",category:"bbq",titleEn:"Grill selection",titleAr:"تشكيلة مشاوي"}
 ];

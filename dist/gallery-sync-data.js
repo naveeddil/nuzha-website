@@ -1,0 +1,1 @@
+window.NUZHA_SYNCED_GALLERY = [];
