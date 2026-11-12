@@ -1,4 +1,4 @@
-const images=window.NUZHA_GALLERY||[],filters=document.querySelector("#galleryFilters"),grid=document.querySelector("#galleryGrid"),lightbox=document.querySelector("#lightbox");
+const savedAdmin=(()=>{try{return JSON.parse(localStorage.getItem("nuzha-admin-v1"))}catch{return null}})(),images=savedAdmin?.gallery||window.NUZHA_GALLERY||[],filters=document.querySelector("#galleryFilters"),grid=document.querySelector("#galleryGrid"),lightbox=document.querySelector("#lightbox");
 let lang=localStorage.getItem("nuzha-lang")||"en",filter="all",activeIndex=0;
 const labels={en:{all:"All moments",feasts:"Feasts",dishes:"Dishes",kitchen:"In the kitchen",salads:"Salads & mezze",bbq:"BBQ",hospitality:"Hospitality"},ar:{all:"كل الصور",feasts:"الولائم",dishes:"الأطباق",kitchen:"في المطبخ",salads:"السلطات والمقبلات",bbq:"المشويات",hospitality:"الضيافة"}};
 function applyLanguage(){document.documentElement.lang=lang;document.documentElement.dir=lang==="ar"?"rtl":"ltr";document.querySelector("#langBtn").textContent=lang==="en"?"العربية":"English";document.querySelectorAll("[data-en]").forEach(el=>el.textContent=el.dataset[lang]);render()}

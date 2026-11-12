@@ -1,4 +1,4 @@
-const items=window.NUZHA_MENU||[],grid=document.querySelector("#fullMenuGrid"),filters=document.querySelector("#menuPageFilters");
+const savedAdmin=(()=>{try{return JSON.parse(localStorage.getItem("nuzha-admin-v1"))}catch{return null}})(),items=savedAdmin?.menu||window.NUZHA_MENU||[],grid=document.querySelector("#fullMenuGrid"),filters=document.querySelector("#menuPageFilters");
 let lang=localStorage.getItem("nuzha-lang")||"en",filter="all";
 const labels={en:{all:"All",feasts:"Feasts",rice:"Rice",seafood:"Seafood",bbq:"BBQ",salads:"Salads & mezze",kitchen:"From the kitchen"},ar:{all:"الكل",feasts:"الولائم",rice:"الأرز",seafood:"المأكولات البحرية",bbq:"المشويات",salads:"السلطات والمقبلات",kitchen:"من المطبخ"}};
 function applyLanguage(){document.documentElement.lang=lang;document.documentElement.dir=lang==="ar"?"rtl":"ltr";langBtn.textContent=lang==="en"?"العربية":"English";document.querySelectorAll("[data-en]").forEach(el=>el.textContent=el.dataset[lang]);render()}
