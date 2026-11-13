@@ -10,6 +10,7 @@ const fontChoices = {
 };
 const menuCategories = {bbq: "Barbecue grills · المشويات", breakfast: "Breakfast · الفطور", rice: "Rice items · الكبسات والأرز", fried: "Fried & fish · البروستد والأسماك", appetizers: "Appetizers · المقبلات", curries: "Curries · الإيدامات"};
 const galleryCategories = {feasts: "Feasts", dishes: "Dishes", kitchen: "Kitchen", salads: "Salads & mezze", bbq: "Barbecue", hospitality: "Hospitality"};
+for (const [key, label] of Object.entries(window.NUZHA_SYNCED_GALLERY_CATEGORIES || {})) galleryCategories[key] = `${label.en} · ${label.ar}`;
 const socialFields = {facebook: "Facebook page", instagram: "Instagram", tiktok: "TikTok", snapchat: "Snapchat", x: "X (Twitter)", google: "Google Business profile"};
 const defaultSettings = {
   englishName: "Nuzha Restaurant", arabicName: "مطعم ومطبخ النزهة",
@@ -81,6 +82,10 @@ async function openPortal() {
   const base = seed();
   data = result.content ? {...base, ...result.content, settings: {...base.settings, ...(result.content.settings || {})}} : base;
   if (!isCdrMenu(data.menu)) data.menu = base.menu; // replace the old 10-item sample menu
+  // Photos published with scripts/sync-gallery.mjs appear here automatically unless an admin deleted them.
+  data.gallerySuppressed = Array.isArray(data.gallerySuppressed) ? data.gallerySuppressed : [];
+  const known = new Set(data.gallery.map(x => x.src)), suppressed = new Set(data.gallerySuppressed);
+  data.gallery.push(...(window.NUZHA_SYNCED_GALLERY || []).filter(x => !known.has(x.src) && !suppressed.has(x.src)).map(x => structuredClone(x)));
   const s = data.settings;
   if (s.phone === "053 003 5292" && (!s.whatsapp || toDigits(s.whatsapp) === "966530035292")) { s.phone = defaultSettings.phone; s.whatsapp = defaultSettings.whatsapp; }
   s.menuSections = s.menuSections || {};
@@ -311,7 +316,13 @@ adminWorkspace.addEventListener("click", e => {
   if (rm) {
     const list = data[rm.dataset.remove], item = list[+rm.dataset.i];
     const name = item?.nameEn || item?.titleEn || item?.name || "this item";
-    if (confirm(`Delete “${name}”? It is removed from the website when you save.`)) { list.splice(+rm.dataset.i, 1); setDirty(); render(); }
+    if (confirm(`Delete “${name}”? It is removed from the website when you save.`)) {
+      const [removed] = list.splice(+rm.dataset.i, 1);
+      if (rm.dataset.remove === "gallery" && (window.NUZHA_SYNCED_GALLERY || []).some(x => x.src === removed?.src)) {
+        data.gallerySuppressed = [...new Set([...(data.gallerySuppressed || []), removed.src])];
+      }
+      setDirty(); render();
+    }
     return;
   }
   const mv = e.target.closest("[data-move]");
