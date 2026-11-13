@@ -1,0 +1,54 @@
+name: Deploy website via FTP
+
+# Manual only: Actions tab -> "Deploy website via FTP" -> Run workflow.
+# Leave "Preview only" ticked first to see what would be uploaded.
+on:
+  workflow_dispatch:
+    inputs:
+      server_dir:
+        description: "Remote folder: 'public_html/' if the FTP account opens in the home folder, './' if it opens directly in public_html"
+        type: choice
+        options:
+          - public_html/
+          - ./
+        default: public_html/
+      dry_run:
+        description: "Preview only (list changes, upload nothing)"
+        type: boolean
+        default: true
+
+concurrency:
+  group: deploy-production
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out source
+        uses: actions/checkout@v4
+
+      - name: Validate JavaScript
+        run: |
+          for f in dist/app.js dist/menu.js dist/gallery.js dist/menu-credits.js; do
+            node --check "$f"
+          done
+
+      - name: Upload dist/ over FTPS
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+        with:
+          server: ${{ secrets.FTP_SERVER }}
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          protocol: ftps
+          port: 21
+          local-dir: ./dist/
+          server-dir: ${{ inputs.server_dir }}
+          dry-run: ${{ inputs.dry_run }}
+          log-level: standard
+          # Never touch the server's database settings or admin-uploaded files.
+          exclude: |
+            **/.git*
+            **/.git*/**
+            private/config.php
+            uploads/**
