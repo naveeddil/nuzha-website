@@ -2,6 +2,8 @@
 // (_images/CDR Menu/Nuzha Menu 2025.cdr) and publishes web-sized copies for the menu page.
 //
 // Usage (from nuzha-website):  node scripts/extract-cdr-menu-photos.mjs
+// Note: the published photos are afterwards put on a uniform plate by scripts/plate-menu-photos.mjs.
+// Re-running this script restores the unplated photos, so run the plating script again afterwards.
 //
 // Output:
 //   dist/menu-images/restaurant/*.jpg        web copies (square dish crops, max 900 px)
