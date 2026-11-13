@@ -1,0 +1,11 @@
+.menu-image-wrap{position:relative;min-height:260px}
+.menu-image-wrap img{position:absolute;inset:0}
+.image-placeholder{position:absolute;left:12px;bottom:12px;background:rgba(33,57,47,.92);color:#fff;padding:7px 10px;border-radius:999px;font-size:11px;font-weight:700}
+.menu-flags{display:flex;flex-wrap:wrap;gap:7px;margin-top:16px}
+.menu-flags span{background:#fff0cc;color:#7b4b00;border:1px solid #edc568;border-radius:999px;padding:5px 9px;font-size:11px;font-weight:700}
+.full-menu-copy .review-note{font-size:12px;margin-top:10px;color:#8a4b16}
+.missing-price{font-size:14px!important;white-space:normal!important;text-align:end}
+.image-credit-link{text-align:center;margin-top:22px;font-size:13px}.image-credit-link a{text-decoration:underline}
+.event-order-actions{display:flex;flex-wrap:wrap;justify-content:flex-end;gap:10px}.event-order-actions a{white-space:nowrap}.menu-order-strip>strong{max-width:720px}@media(max-width:900px){.menu-order-strip{align-items:flex-start;flex-direction:column}.event-order-actions{justify-content:flex-start}}
+.event-order-actions a{display:inline-flex;align-items:center;gap:8px}.event-action-icon{width:20px;height:20px;flex:0 0 20px;fill:currentColor}
+@media(max-width:600px){.menu-image-wrap{min-height:230px}}
