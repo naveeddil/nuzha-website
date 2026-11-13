@@ -3,3 +3,6 @@ dist/private/config.php
 dist/uploads/*
 !dist/uploads/.htaccess
 
+
+# Local tooling (e.g. sharp for scripts/plate-menu-photos.mjs)
+node_modules/
