@@ -3,7 +3,7 @@
 const NUZHA_MENU_META={
   bbq:{descEn:"Seasoned and grilled over charcoal in the Nuzha style.",descAr:"متبل ومشوي على الفحم على طريقة النزهة.",image:"gallery-images/bbq--mixed-kebabs.jpg"},
   breakfast:{descEn:"Freshly prepared for a warm, traditional breakfast.",descAr:"يحضر طازجاً لفطور تقليدي شهي.",image:"gallery-images/kitchen--ready-to-serve.jpg"},
-  rice:{descEn:"Served with fragrant rice and Nuzha house seasoning.",descAr:"يقدم مع الأرز العطري وبهارات النزهة.",image:"assets/rice-clean.png"},
+  rice:{descEn:"Served with fragrant rice and Nuzha house seasoning.",descAr:"يقدم مع الأرز العطري وبهارات النزهة.",image:"assets/rice-clean.jpg"},
   fried:{descEn:"Fried until golden and crisp, then served fresh.",descAr:"يقلى حتى يصبح ذهبياً ومقرمشاً ويقدم طازجاً.",image:"gallery-images/dishes--fried-fish.png"},
   appetizers:{descEn:"A fresh house appetizer, prepared to order.",descAr:"مقبل طازج من إعداد المطعم يحضر عند الطلب.",image:"gallery-images/salads--mezze-platter.jpg"},
   curries:{descEn:"Slow-cooked with a balanced blend of aromatic spices.",descAr:"مطهو على مهل بمزيج متوازن من البهارات العطرية.",image:"gallery-images/kitchen--ready-to-serve.jpg"}
