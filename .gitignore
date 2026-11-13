@@ -1,0 +1,5 @@
+# Production-only configuration and user uploads
+dist/private/config.php
+dist/uploads/*
+!dist/uploads/.htaccess
+
