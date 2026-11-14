@@ -22,3 +22,4 @@
 .reviews-wrap .menu-note.event-note{margin-top:50px}
 @media(max-width:900px){.reviews-hero{grid-template-columns:1fr;padding-top:130px}}
 @media(max-width:520px){.reviews-hero h1{font-size:56px}.overview-score strong{font-size:56px}}
+.google-reviews{margin-top:70px}.google-reviews-head{margin-bottom:26px}.google-reviews-head h2{font-size:clamp(38px,5vw,64px);letter-spacing:-.03em}.google-reviews-box{min-height:120px}

@@ -124,6 +124,27 @@
     }
   }
 
+  // Google reviews widget (Elfsight): shown in [data-google-reviews] when Admin → Settings holds its code or ID.
+  function applyGoogleReviews() {
+    const match = String(settings?.googleReviewsWidget || "").match(/(?:elfsight-app-)?([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})/i);
+    if (!match) return;
+    document.querySelectorAll("[data-google-reviews]").forEach(box => {
+      if (box.dataset.loaded) return;
+      box.dataset.loaded = "1";
+      const widget = document.createElement("div");
+      widget.className = `elfsight-app-${match[1].toLowerCase()}`;
+      widget.setAttribute("data-elfsight-app-lazy", "");
+      box.appendChild(widget);
+      box.closest("[data-google-reviews-section]")?.removeAttribute("hidden");
+    });
+    if (document.querySelector("[data-google-reviews] div") && !document.querySelector('script[src="https://elfsightcdn.com/platform.js"]')) {
+      const script = document.createElement("script");
+      script.src = "https://elfsightcdn.com/platform.js";
+      script.async = true;
+      document.head.appendChild(script);
+    }
+  }
+
   function applyAll() {
     if (!settings) return;
     document.body.classList.toggle("hide-menu-flags", settings.showMenuFlags === false);
@@ -131,6 +152,7 @@
     applySocials();
     applyAnnouncement();
     applyLanguageText();
+    applyGoogleReviews();
   }
 
   // Phone numbers such as "+966 50 190 9933" are reordered by the browser inside Arabic (right-to-left) text.

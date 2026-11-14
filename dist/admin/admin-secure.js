@@ -238,6 +238,9 @@ function renderSettings() {
   <section class="panel"><h2>Social & profile links</h2><p class="hint">Full addresses starting with https://. Empty links are not shown.</p><div class="settings-grid">
     ${Object.entries(socialFields).map(([k, label]) => text(label, k, 'type="url" placeholder="https://…"', "wide")).join("")}
   </div></section>
+  <section class="panel"><h2>Google reviews widget</h2><p class="hint">Paste the installation code from Elfsight (Google Reviews widget), or just its widget ID. The reviews box appears on the Testimonials page. Leave empty to hide it.</p><div class="settings-grid">
+    ${field("Elfsight widget code or ID", `<textarea ${set("googleReviewsWidget", 'placeholder="&lt;div class=&quot;elfsight-app-xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx&quot; data-elfsight-app-lazy&gt;&lt;/div&gt;"')}>${esc(s.googleReviewsWidget)}</textarea>`, "wide")}
+  </div></section>
   <section class="panel"><h2>Menu display</h2><div class="settings-grid">
     <div class="wide">${check("Show internal flags on the public menu", set("showMenuFlags"), s.showMenuFlags !== false, "“Needs confirmation”, “Price needed” and “Temporary image” labels. Untick before the official launch.")}</div>
     ${Object.entries(menuCategories).map(([k, label]) => { const sec = s.menuSections[k] || {}; return `<div class="section-editor wide"><h3>${esc(label)}</h3><div class="settings-grid">
@@ -383,6 +386,7 @@ function validate() {
   for (const k of ["phone", "mobile", "whatsapp", "eventsPhone"]) if (s[k] && toDigits(s[k]).length < 9) problems.push(`Check the ${k === "eventsPhone" ? "events" : k} number`);
   data.menu.forEach(x => { const p = String(x.price ?? "").trim(); if (p && p !== "—" && !/^\d+(\.\d{1,2})?$/.test(p)) problems.push(`Price for “${x.nameEn}” should be a number or —`); });
   if (data.menu.filter(x => x.featured && !x.hidden).length > 8) problems.push("Choose at most 8 dishes for the homepage");
+  if (String(s.googleReviewsWidget || "").trim() && !/(?:elfsight-app-)?([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})/i.test(s.googleReviewsWidget)) problems.push("Google reviews widget: paste the full Elfsight code or its widget ID");
   return problems;
 }
 saveAll.onclick = async () => {
