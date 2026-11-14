@@ -5,6 +5,9 @@
   let reviews = null; // null while loading
   const overview = document.querySelector("#reviewsOverview");
   const list = document.querySelector("#reviewsList");
+  const pager = document.querySelector("#reviewsPager");
+  const PAGE_SIZE = 12; // reviews per page
+  let page = 1;
 
   const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"})[c]);
   const ratingOf = r => { const v = parseFloat(r?.rating); return v > 0 && v <= 5 ? Math.round(v * 2) / 2 : null; };
@@ -15,13 +18,14 @@
   function render() {
     if (reviews === null) {
       overview.innerHTML = `<p class="reviews-loading">${t("Loading reviews…", "جارٍ تحميل الآراء…")}</p>`;
-      list.innerHTML = "";
+      list.innerHTML = ""; pager.innerHTML = "";
       return;
     }
     const shown = reviews.filter(text);
     const rated = shown.map(ratingOf).filter(Boolean);
     if (!shown.length) {
       overview.innerHTML = "";
+      pager.innerHTML = "";
       list.innerHTML = `<p class="reviews-empty">${t("Guest reviews will appear here soon.", "ستظهر آراء ضيوفنا هنا قريباً.")}</p>`;
       return;
     }
@@ -35,8 +39,35 @@
     } else {
       overview.innerHTML = "";
     }
-    list.innerHTML = shown.map(r => `<article class="quote">${stars(ratingOf(r))}<blockquote>“${esc(text(r))}”</blockquote>${r.name ? `<p class="quote-author">— ${esc(r.name)}${r.source ? ` <span class="quote-source">· ${esc(r.source)}</span>` : ""}</p>` : ""}</article>`).join("");
+    const pages = Math.max(1, Math.ceil(shown.length / PAGE_SIZE));
+    page = Math.min(Math.max(1, page), pages);
+    const from = (page - 1) * PAGE_SIZE;
+    renderPager(pages, from, Math.min(from + PAGE_SIZE, shown.length), shown.length);
+    list.innerHTML = shown.slice(from, from + PAGE_SIZE).map(r => `<article class="quote">${stars(ratingOf(r))}<blockquote>“${esc(text(r))}”</blockquote>${r.name ? `<p class="quote-author">— ${esc(r.name)}${r.source ? ` <span class="quote-source">· ${esc(r.source)}</span>` : ""}</p>` : ""}</article>`).join("");
   }
+
+  // Page numbers with ellipses, e.g. 1 … 4 5 6 … 12
+  function pageNumbers(pages) {
+    if (pages <= 7) return Array.from({length: pages}, (_, i) => i + 1);
+    const set = [...new Set([1, page - 1, page, page + 1, pages])].filter(n => n >= 1 && n <= pages).sort((a, b) => a - b);
+    return set.flatMap((n, i) => (i && n - set[i - 1] > 1 ? ["…", n] : [n]));
+  }
+  function renderPager(pages, from, to, total) {
+    if (pages <= 1) { pager.innerHTML = ""; return; }
+    const btn = (label, target, extra = "") => `<button type="button" data-page="${target}" ${extra}>${label}</button>`;
+    const numbers = pageNumbers(pages).map(n => (n === "…"
+      ? '<span class="pager-gap">…</span>'
+      : btn(n, n, n === page ? 'aria-current="page" class="is-current"' : `aria-label="${t("Page", "صفحة")} ${n}"`))).join("");
+    pager.innerHTML = `<p class="pager-info">${t(`Showing ${from + 1}–${to} of ${total} reviews`, `عرض ${from + 1}–${to} من ${total} رأياً`)}</p>`
+      + `<div class="pager-buttons">${btn(t("← Previous", "→ السابق"), page - 1, page === 1 ? "disabled" : "")}${numbers}${btn(t("Next →", "التالي ←"), page + 1, page === pages ? "disabled" : "")}</div>`;
+  }
+  pager.addEventListener("click", e => {
+    const b = e.target.closest("button[data-page]");
+    if (!b || b.disabled) return;
+    page = +b.dataset.page;
+    render();
+    window.scrollTo({top: list.getBoundingClientRect().top + window.scrollY - 120, behavior: "smooth"});
+  });
 
   function applyLanguage() {
     document.documentElement.lang = lang;
@@ -62,6 +93,7 @@
 
   window.addEventListener("nuzha:content", e => {
     reviews = Array.isArray(e.detail?.reviews) ? e.detail.reviews : [];
+    page = 1;
     render();
   });
   // Guest feedback form → api/feedback.php. Entries wait in Admin → Reviews until approved.

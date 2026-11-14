@@ -46,3 +46,7 @@
 .feedback-actions{display:flex;flex-wrap:wrap;align-items:center;gap:16px}.form-status{margin:0;font-weight:600}.form-status.ok{color:#2e7d4f}.form-status.error{color:#c0392b}
 @media(max-width:1000px){.why-grid{grid-template-columns:repeat(2,1fr)}.feedback-section{grid-template-columns:1fr}}
 @media(max-width:560px){.why-grid,.feedback-form{grid-template-columns:1fr}}
+/* Pagination */
+.reviews-pager{display:grid;justify-items:center;gap:12px;margin-top:30px}.reviews-pager:empty{display:none}.pager-info{margin:0;color:var(--muted);font-size:14px}
+.pager-buttons{display:flex;flex-wrap:wrap;justify-content:center;gap:8px}.pager-buttons button{min-width:44px;height:44px;padding:0 14px;border-radius:999px;border:1px solid color-mix(in srgb,var(--ink) 20%,transparent);background:var(--cream);color:var(--ink);font:inherit;font-weight:700;cursor:pointer}
+.pager-buttons button:hover:not(:disabled){border-color:var(--accent);color:var(--accent)}.pager-buttons button.is-current{background:var(--accent);border-color:var(--accent);color:#fff}.pager-buttons button:disabled{opacity:.4;cursor:default}.pager-gap{align-self:center;padding:0 4px;color:var(--muted)}
