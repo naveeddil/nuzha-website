@@ -16,6 +16,10 @@
     "/gallery.html": {
       en: ["Food & Feast Gallery | Nuzha Restaurant, Al Nairyah", "Photos of Nuzha Restaurant's grills, mandi and kabsa platters, family feasts and kitchen in Al Nairyah, Saudi Arabia."],
       ar: ["معرض الصور | مطعم ومطبخ النزهة، النعيرية", "صور مشويات وصحون المندي والكبسة وولائم العائلة ومطبخ مطعم ومطبخ النزهة في النعيرية."]
+    },
+    "/reviews.html": {
+      en: ["Guest Reviews | Nuzha Restaurant, Al Nairyah", "Read what guests say about Nuzha Restaurant in Al Nairyah: the food, generous portions and family-friendly welcome. Share your own review on Google."],
+      ar: ["آراء الضيوف | مطعم ومطبخ النزهة، النعيرية", "اقرأ ما يقوله ضيوفنا عن مطعم ومطبخ النزهة في النعيرية: الطعام والكميات السخية والترحيب العائلي. شاركنا تقييمك على جوجل."]
     }
   };
   const path = location.pathname.endsWith("/index.html") ? location.pathname.slice(0, -"index.html".length) : location.pathname;

@@ -203,7 +203,7 @@ function renderReviews() {
         ${field("Review (English)", `<textarea ${d} data-key="en">${esc(x.en)}</textarea>`)}
         ${field("المراجعة (عربي)", `<textarea dir="rtl" ${d} data-key="ar">${esc(x.ar)}</textarea>`)}
         ${field("Customer name", `<input ${d} data-key="name" value="${esc(x.name)}">`)}
-        ${field("Rating (1–5)", `<input type="number" min="1" max="5" ${d} data-key="rating" value="${esc(x.rating)}">`)}
+        ${field("Rating (1–5)", `<input type="number" min="1" max="5" step="0.5" ${d} data-key="rating" value="${esc(x.rating)}">`)}
       </div><div class="card-actions"><button class="remove-btn" data-remove="reviews" data-i="${i}">×</button></div></article>`;
     }).join("")}</div></section>`;
   $("#addReview").onclick = () => { data.reviews.unshift({en: "", ar: "", name: "", rating: 5}); setDirty(); renderReviews(); };

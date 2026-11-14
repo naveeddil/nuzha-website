@@ -10,7 +10,7 @@
     whatsapp: {display: "053 003 5292", digits: "966530035292"},
     eventsPhone: {display: "+966 50 190 9933", digits: "966501909933"}
   };
-  const socialIcons = {facebook: ["f", "Facebook"], google: ["G", "Google"], tiktok: ["♪", "TikTok"], instagram: ["◎", "Instagram"], snapchat: ["👻", "Snapchat"], x: ["𝕏", "X"]};
+  const socialIcons = {facebook: ["<svg viewBox=\"0 0 24 24\" aria-hidden=\"true\"><path d=\"M14 8h3V4h-3c-2.8 0-5 2.2-5 5v2H7v4h2v9h4v-9h3l1-4h-4V9c0-.6.4-1 1-1z\"/></svg>", "Facebook"], google: ["<svg viewBox=\"0 0 24 24\" aria-hidden=\"true\"><path d=\"M21.6 12.2c0-.7-.1-1.4-.2-2H12v3.9h5.4a4.6 4.6 0 0 1-2 3v2.5h3.2c1.9-1.7 3-4.3 3-7.4zM12 22c2.7 0 5-.9 6.6-2.4l-3.2-2.5c-.9.6-2 1-3.4 1-2.6 0-4.8-1.8-5.6-4.1H3.1v2.6A10 10 0 0 0 12 22zM6.4 14c-.2-.6-.3-1.3-.3-2s.1-1.4.3-2V7.4H3.1a10 10 0 0 0 0 9.2L6.4 14zM12 5.9c1.5 0 2.8.5 3.8 1.5l2.9-2.9A10 10 0 0 0 3.1 7.4L6.4 10c.8-2.4 3-4.1 5.6-4.1z\"/></svg>", "Google"], tiktok: ["<svg viewBox=\"0 0 24 24\" aria-hidden=\"true\"><path d=\"M16.6 3c.4 2.3 1.9 3.9 4.4 4.1v3.4c-1.6.1-3-.4-4.4-1.3v6.3c0 3.9-2.7 6.5-6.3 6.5A6.2 6.2 0 0 1 4 15.7c0-3.8 3.2-6.6 7.1-6.1v3.6c-1.9-.4-3.5.8-3.5 2.6 0 1.5 1.2 2.7 2.7 2.7 1.7 0 2.8-1.1 2.8-3.1V3h3.5z\"/></svg>", "TikTok"], instagram: ["◎", "Instagram"], snapchat: ["👻", "Snapchat"], x: ["𝕏", "X"]};
   let settings = null;
 
   const toDigits = value => {
