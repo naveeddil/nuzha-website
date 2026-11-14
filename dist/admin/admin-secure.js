@@ -220,7 +220,7 @@ function feedbackPanel() {
 function renderReviews() {
   heading("REVIEW MANAGER", "Verified customer feedback.");
   if (pendingFeedback === null) loadFeedback();
-  adminWorkspace.innerHTML = feedbackPanel() + `<section class="panel"><h2>Published reviews</h2><div class="toolbar"><button id="addReview" class="primary">+ Add review</button></div>
+  adminWorkspace.innerHTML = feedbackPanel() + importPanel() + `<section class="panel"><h2>Published reviews (${data.reviews.length})</h2><div class="toolbar"><button id="addReview" class="primary">+ Add review</button></div>
     <p class="hint">Only add genuine reviews from real customers (for example copied from Google), with their permission.</p>
     <div class="editor-list">${data.reviews.map((x, i) => {
       const d = `data-type="reviews" data-i="${i}"`;
@@ -229,9 +229,95 @@ function renderReviews() {
         ${field("المراجعة (عربي)", `<textarea dir="rtl" ${d} data-key="ar">${esc(x.ar)}</textarea>`)}
         ${field("Customer name", `<input ${d} data-key="name" value="${esc(x.name)}">`)}
         ${field("Rating (1–5)", `<input type="number" min="1" max="5" step="0.5" ${d} data-key="rating" value="${esc(x.rating)}">`)}
+        ${field("Source (optional, e.g. Google)", `<input ${d} data-key="source" value="${esc(x.source)}" placeholder="Google, WhatsApp, comment card…">`)}
       </div><div class="card-actions"><button class="remove-btn" data-remove="reviews" data-i="${i}">×</button></div></article>`;
     }).join("")}</div></section>`;
   $("#addReview").onclick = () => { data.reviews.unshift({en: "", ar: "", name: "", rating: 5}); setDirty(); renderReviews(); };
+  $("#importReviewsFile").onchange = async e => {
+    const file = e.target.files[0]; e.target.value = "";
+    if (!file) return;
+    try { importPreview = buildImport(await file.text(), file.name); }
+    catch (err) { importPreview = null; toast(err.message, true); }
+    renderReviews();
+  };
+  $("#reviewTemplate").onclick = () => downloadText("nuzha-reviews-template.csv", "\ufeffname,rating,review_en,review_ar,source,date\nFirst name,5,English review text (leave empty if only Arabic),النص العربي (اتركه فارغاً إن كانت المراجعة بالإنجليزية فقط),Google,2026-11-14\n");
+  if (importPreview) {
+    $("#confirmImport").onclick = () => {
+      data.reviews.push(...importPreview.add);
+      toast(`${importPreview.add.length} review(s) added — check them below, then press Save changes`);
+      importPreview = null; setDirty(); renderReviews();
+    };
+    $("#cancelImport").onclick = () => { importPreview = null; renderReviews(); };
+  }
+}
+
+// ---------- Review import (CSV) ----------
+// Columns (header names are flexible): name, rating, review_en, review_ar, source, date.
+// Excel: Save As → "CSV UTF-8 (Comma delimited)" so Arabic text is kept.
+let importPreview = null;
+function parseCsv(text) {
+  const rows = []; let row = [], cell = "", quoted = false;
+  text = text.replace(/^\ufeff/, "");
+  const delimiter = (text.split(/\r?\n/)[0].match(/;/g) || []).length > (text.split(/\r?\n/)[0].match(/,/g) || []).length ? ";" : ",";
+  for (let i = 0; i < text.length; i++) {
+    const c = text[i];
+    if (quoted) {
+      if (c === '"' && text[i + 1] === '"') { cell += '"'; i++; }
+      else if (c === '"') quoted = false;
+      else cell += c;
+    } else if (c === '"') quoted = true;
+    else if (c === delimiter) { row.push(cell); cell = ""; }
+    else if (c === "\n" || c === "\r") { if (c === "\r" && text[i + 1] === "\n") i++; row.push(cell); rows.push(row); row = []; cell = ""; }
+    else cell += c;
+  }
+  if (cell !== "" || row.length) { row.push(cell); rows.push(row); }
+  return rows.filter(r => r.some(v => v.trim() !== ""));
+}
+function buildImport(text, fileName) {
+  const rows = parseCsv(text);
+  if (rows.length < 2) throw new Error("The file has no review rows.");
+  const header = rows[0].map(h => h.trim().toLowerCase().replace(/[^a-z_]/g, ""));
+  const col = names => header.findIndex(h => names.includes(h));
+  const c = {
+    name: col(["name", "name_en", "customer", "customername", "reviewer", "author"]),
+    rating: col(["rating", "stars", "star", "score"]),
+    en: col(["review_en", "testimonial_en", "en", "english", "review", "text", "comment"]),
+    ar: col(["review_ar", "testimonial_ar", "ar", "arabic"]),
+    source: col(["source", "platform", "site"]),
+    date: col(["date", "reviewdate", "created"])
+  };
+  if (c.name < 0 || c.rating < 0 || (c.en < 0 && c.ar < 0)) throw new Error("Missing columns. The first row must include name, rating and review_en or review_ar.");
+  const key = r => `${String(r.name).trim().toLowerCase()}|${String(r.en || r.ar).trim().toLowerCase()}`;
+  const existing = new Set(data.reviews.map(key));
+  const add = [], skipped = [];
+  rows.slice(1).forEach((r, i) => {
+    const line = i + 2, get = k => (c[k] >= 0 ? String(r[c[k]] ?? "").trim() : "");
+    const review = {name: get("name"), rating: Math.round(parseFloat(get("rating").replace(",", ".")) * 2) / 2, en: get("en"), ar: get("ar")};
+    if (get("source")) review.source = get("source");
+    if (get("date")) review.date = get("date");
+    if (!review.name) return skipped.push(`Row ${line}: no name`);
+    if (!(review.rating >= 1 && review.rating <= 5)) return skipped.push(`Row ${line} (${review.name}): rating must be 1–5`);
+    if (!review.en && !review.ar) return skipped.push(`Row ${line} (${review.name}): no review text`);
+    if (existing.has(key(review))) return skipped.push(`Row ${line} (${review.name}): already in the reviews`);
+    existing.add(key(review)); add.push(review);
+  });
+  if (data.reviews.length + add.length > 500) throw new Error(`Too many reviews: the website keeps at most 500 (you have ${data.reviews.length}, the file adds ${add.length}).`);
+  return {fileName, add, skipped};
+}
+function importPanel() {
+  const p = importPreview;
+  const preview = p ? `<div class="import-preview"><h3>${esc(p.fileName)}: ${p.add.length} review(s) ready to add${p.skipped.length ? `, ${p.skipped.length} skipped` : ""}</h3>
+    ${p.add.length ? `<div class="import-table"><table><thead><tr><th>Name</th><th>Rating</th><th>Review</th><th>Source</th></tr></thead><tbody>${p.add.slice(0, 50).map(r => `<tr><td>${esc(r.name)}</td><td>${r.rating}</td><td>${esc((r.en || r.ar).slice(0, 140))}${(r.en || r.ar).length > 140 ? "…" : ""}</td><td>${esc(r.source || "")}</td></tr>`).join("")}</tbody></table>${p.add.length > 50 ? `<p class="hint">…and ${p.add.length - 50} more.</p>` : ""}</div>` : ""}
+    ${p.skipped.length ? `<details class="import-skipped"><summary>Skipped rows (${p.skipped.length})</summary><ul>${p.skipped.map(s => `<li>${esc(s)}</li>`).join("")}</ul></details>` : ""}
+    <div class="toolbar wrap">${p.add.length ? `<button id="confirmImport" class="primary">Add ${p.add.length} review(s)</button>` : ""}<button id="cancelImport">Cancel</button></div></div>` : "";
+  return `<section class="panel"><h2>Import reviews from a spreadsheet</h2>
+    <p class="hint">Use a CSV file with the columns <strong>name, rating, review_en, review_ar</strong> and optionally <strong>source</strong> and <strong>date</strong>. From Excel choose <em>Save As → CSV UTF-8</em> so Arabic text is kept. Only import genuine reviews (for example your Google reviews); you will see a preview before anything is added, and nothing is published until you press Save changes.</p>
+    <div class="toolbar wrap"><label class="mini-button import-button">Choose CSV file…<input type="file" id="importReviewsFile" accept=".csv,text/csv"></label><button type="button" id="reviewTemplate">Download template</button></div>${preview}</section>`;
+}
+function downloadText(name, text) {
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(new Blob([text], {type: "text/csv;charset=utf-8"}));
+  a.download = name; a.click(); setTimeout(() => URL.revokeObjectURL(a.href), 1000);
 }
 
 function fontOptions(selected) { return Object.entries(fontChoices).map(([v, label]) => `<option value="${v}" ${selected === v ? "selected" : ""}>${label}</option>`).join(""); }

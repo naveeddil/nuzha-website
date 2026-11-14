@@ -35,7 +35,7 @@
     } else {
       overview.innerHTML = "";
     }
-    list.innerHTML = shown.map(r => `<article class="quote">${stars(ratingOf(r))}<blockquote>“${esc(text(r))}”</blockquote>${r.name ? `<p class="quote-author">— ${esc(r.name)}</p>` : ""}</article>`).join("");
+    list.innerHTML = shown.map(r => `<article class="quote">${stars(ratingOf(r))}<blockquote>“${esc(text(r))}”</blockquote>${r.name ? `<p class="quote-author">— ${esc(r.name)}${r.source ? ` <span class="quote-source">· ${esc(r.source)}</span>` : ""}</p>` : ""}</article>`).join("");
   }
 
   function applyLanguage() {

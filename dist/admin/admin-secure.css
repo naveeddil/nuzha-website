@@ -29,3 +29,8 @@
 .feedback-text{margin:0;font-size:15px;line-height:1.6;white-space:pre-wrap}
 .feedback-private{margin:8px 0 0;font-size:13px;color:#a0442a;font-weight:600}
 .feedback-card .editor-fields{display:block}
+/* Review CSV import */
+.import-button{padding:10px 16px;font-size:14px}.import-preview{margin-top:18px;border-top:1px solid var(--line);padding-top:16px}.import-preview h3{margin:0 0 12px}
+.import-table{max-height:420px;overflow:auto;border:1px solid var(--line);border-radius:12px;background:#fff}.import-table table{width:100%;border-collapse:collapse;font-size:14px}
+.import-table th,.import-table td{padding:8px 10px;border-bottom:1px solid var(--line);text-align:start;vertical-align:top}.import-table th{position:sticky;top:0;background:var(--cream)}
+.import-skipped{margin:12px 0;font-size:14px}.import-skipped ul{margin:8px 0 0;padding-inline-start:20px;color:#a0442a}
