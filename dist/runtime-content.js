@@ -133,6 +133,29 @@
     applyLanguageText();
   }
 
+  // Phone numbers such as "+966 50 190 9933" are reordered by the browser inside Arabic (right-to-left) text.
+  // Wrap each one in invisible left-to-right isolate marks (U+2066 … U+2069) so it always reads correctly.
+  const LRI = "⁦", PDI = "⁩";
+  const phonePattern = /\+?\d[\d  -]{6,}\d/g;
+  function isolatePhones() {
+    const walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT);
+    const nodes = [];
+    while (walker.nextNode()) nodes.push(walker.currentNode);
+    for (const node of nodes) {
+      if (!/\d{3}/.test(node.nodeValue) || node.parentElement?.closest("script,style,textarea,input")) continue;
+      const text = node.nodeValue.split(LRI).join("").split(PDI).join("").replace(phonePattern, m => LRI + m + PDI);
+      if (text !== node.nodeValue) node.nodeValue = text;
+    }
+  }
+  let isolateQueued = false;
+  const queueIsolate = () => {
+    if (isolateQueued) return;
+    isolateQueued = true;
+    requestAnimationFrame(() => { isolateQueued = false; isolatePhones(); });
+  };
+  isolatePhones();
+  new MutationObserver(queueIsolate).observe(document.body, {childList: true, subtree: true, characterData: true});
+
   // Page scripts rewrite translated text when the language changes; re-apply custom values afterwards.
   new MutationObserver(() => setTimeout(applyAll, 0)).observe(document.documentElement, {attributes: true, attributeFilter: ["lang"]});
 
