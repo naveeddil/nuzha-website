@@ -95,7 +95,7 @@ const pages = [
   {file: "gallery.html", path: "/gallery.html", title: "Food & Feast Gallery | Nuzha Restaurant, Al Nairyah",
    description: "Photos of Nuzha Restaurant's grills, mandi and kabsa platters, family feasts and kitchen in Al Nairyah, Saudi Arabia.",
    jsonld: [], priority: "0.6"},
-  {file: "reviews.html", path: "/reviews.html", title: "Guest Reviews | Nuzha Restaurant, Al Nairyah",
+  {file: "reviews.html", path: "/reviews.html", title: "Guest Testimonials | Nuzha Restaurant, Al Nairyah",
    description: "Read what guests say about Nuzha Restaurant in Al Nairyah: the food, generous portions and family-friendly welcome. Share your own review on Google.",
    jsonld: [], priority: "0.6"}
 ];

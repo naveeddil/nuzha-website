@@ -18,7 +18,7 @@
       ar: ["معرض الصور | مطعم ومطبخ النزهة، النعيرية", "صور مشويات وصحون المندي والكبسة وولائم العائلة ومطبخ مطعم ومطبخ النزهة في النعيرية."]
     },
     "/reviews.html": {
-      en: ["Guest Reviews | Nuzha Restaurant, Al Nairyah", "Read what guests say about Nuzha Restaurant in Al Nairyah: the food, generous portions and family-friendly welcome. Share your own review on Google."],
+      en: ["Guest Testimonials | Nuzha Restaurant, Al Nairyah", "Read what guests say about Nuzha Restaurant in Al Nairyah: the food, generous portions and family-friendly welcome. Share your own review on Google."],
       ar: ["آراء الضيوف | مطعم ومطبخ النزهة، النعيرية", "اقرأ ما يقوله ضيوفنا عن مطعم ومطبخ النزهة في النعيرية: الطعام والكميات السخية والترحيب العائلي. شاركنا تقييمك على جوجل."]
     }
   };
