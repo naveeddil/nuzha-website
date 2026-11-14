@@ -125,8 +125,12 @@
   }
 
   // Google reviews widget (Elfsight): shown in [data-google-reviews] when Admin → Settings holds its code or ID.
+  // Built-in widget ID (Nuzha's Elfsight Google Reviews widget); Admin can replace it, or enter "off" to hide the section.
+  const DEFAULT_GOOGLE_REVIEWS_WIDGET = "ab2c7ce1-48b3-44e9-81af-16c853afa4b2";
   function applyGoogleReviews() {
-    const match = String(settings?.googleReviewsWidget || "").match(/(?:elfsight-app-)?([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})/i);
+    const saved = String(settings?.googleReviewsWidget || "").trim();
+    if (/^(off|none|hide)$/i.test(saved)) return;
+    const match = (saved || DEFAULT_GOOGLE_REVIEWS_WIDGET).match(/(?:elfsight-app-)?([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})/i);
     if (!match) return;
     document.querySelectorAll("[data-google-reviews]").forEach(box => {
       if (box.dataset.loaded) return;
