@@ -64,6 +64,37 @@
     reviews = Array.isArray(e.detail?.reviews) ? e.detail.reviews : [];
     render();
   });
+  // Guest feedback form → api/feedback.php. Entries wait in Admin → Reviews until approved.
+  const form = document.querySelector("#feedbackForm");
+  const status = document.querySelector("#feedbackStatus");
+  const openedAt = Date.now();
+  const say = (en, ar, ok) => { status.textContent = t(en, ar); status.className = `form-status ${ok ? "ok" : "error"}`; };
+  if (form) form.addEventListener("submit", async e => {
+    e.preventDefault();
+    const f = new FormData(form);
+    const body = {
+      name: String(f.get("name") || "").trim(), rating: Number(f.get("rating") || 0), message: String(f.get("message") || "").trim(),
+      contact: String(f.get("contact") || "").trim(), consent: f.get("consent") === "on", website: String(f.get("website") || ""), elapsed: Date.now() - openedAt
+    };
+    if (body.name.length < 2) return say("Please enter your name.", "الرجاء كتابة اسمك.");
+    if (!body.rating) return say("Please choose a star rating.", "الرجاء اختيار عدد النجوم.");
+    if (body.message.length < 10) return say("Please write a few words about your visit.", "الرجاء كتابة بضع كلمات عن زيارتك.");
+    const button = form.querySelector("button[type=submit]");
+    button.disabled = true;
+    try {
+      const r = await fetch("api/feedback.php", {method: "POST", headers: {"Content-Type": "application/json"}, body: JSON.stringify(body), credentials: "same-origin"});
+      const result = await r.json().catch(() => ({}));
+      if (r.status === 429) return say("Thank you — we have already received your feedback. Please try again later.", "شكراً لك — وصلتنا رسالتك بالفعل. حاول مرة أخرى لاحقاً.");
+      if (!r.ok || !result.ok) throw new Error(result.error || "failed");
+      form.reset();
+      say("Thank you! Your feedback has reached the Nuzha team.", "شكراً لك! وصلت رسالتك إلى فريق النزهة.", true);
+    } catch {
+      say("Sorry, your feedback could not be sent right now. Please try again or message us on WhatsApp.", "عذراً، تعذر إرسال رسالتك الآن. حاول مرة أخرى أو راسلنا عبر واتساب.");
+    } finally {
+      button.disabled = false;
+    }
+  });
+
   // If the content service is unavailable (for example in a local preview), stop showing "Loading".
   setTimeout(() => { if (reviews === null) { reviews = []; render(); } }, 4000);
   applyLanguage();

@@ -32,6 +32,7 @@ const seed = () => ({
 
 let data = seed(), csrf = "", view = "dashboard", needsSetup = false, dirty = false, updatedAt = null;
 let photoMap = {}, menuSearch = "", menuFilter = "all";
+let pendingFeedback = null; // guest feedback waiting for approval (loaded from api/admin.php?action=feedback)
 const $ = s => document.querySelector(s);
 const esc = (v = "") => String(v ?? "").replace(/[&<>"]/g, c => ({"&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;"}[c]));
 const isCdrMenu = menu => Array.isArray(menu) && menu.some(x => ["breakfast", "fried", "appetizers", "curries"].includes(x?.category));
@@ -74,6 +75,7 @@ authForm.onsubmit = async e => {
 };
 
 async function openPortal() {
+  setTimeout(loadFeedback, 0);
   const [result, photos] = await Promise.all([
     request(`${API}?action=content`),
     fetch("../menu-restaurant-images.json").then(r => (r.ok ? r.json() : {})).catch(() => ({}))
@@ -117,7 +119,7 @@ function renderDashboard() {
   const stats = [
     ["Menu items", m.length], ["Shown on menu", m.filter(x => !x.hidden).length], ["On homepage", m.filter(x => x.featured && !x.hidden).length],
     ["Need confirmation", m.filter(x => x.needsReview).length], ["Price by weight / missing", m.filter(x => x.price === "—" || !String(x.price).trim()).length],
-    ["Gallery photos", data.gallery.length], ["Guest reviews", data.reviews.length], ["Last saved", updatedAt ? new Date(updatedAt.replace(" ", "T")).toLocaleString() : "Not yet"]
+    ["Gallery photos", data.gallery.length], ["Guest reviews", data.reviews.length], ["New guest feedback", pendingFeedback === null ? "…" : pendingFeedback.filter(x => !data.reviews.some(r => r.feedbackId === x.id)).length], ["Last saved", updatedAt ? new Date(updatedAt.replace(" ", "T")).toLocaleString() : "Not yet"]
   ];
   adminWorkspace.innerHTML = `<div class="stat-grid">${stats.map(([k, v]) => `<article class="stat-card"><span>${k}</span><strong ${String(v).length > 6 ? 'class="small"' : ""}>${esc(v)}</strong></article>`).join("")}</div>
   <section class="panel"><h2>Quick actions</h2><div class="quick-actions">
@@ -193,9 +195,32 @@ function renderGallery() {
   };
 }
 
+// Guest feedback sent through the Testimonials page form waits here until it is approved or dismissed.
+async function loadFeedback() {
+  try { pendingFeedback = (await request(`${API}?action=feedback`)).feedback || []; }
+  catch { pendingFeedback = []; }
+  if (view === "reviews" || view === "dashboard") render();
+}
+const starsText = r => "★".repeat(Math.floor(r)) + (r % 1 ? "½" : "");
+function feedbackPanel() {
+  if (pendingFeedback === null) return `<section class="panel"><h2>Guest feedback waiting for approval</h2><p class="hint">Loading…</p></section>`;
+  const added = new Set(data.reviews.map(r => r.feedbackId).filter(Boolean));
+  const list = pendingFeedback.filter(x => !added.has(x.id));
+  return `<section class="panel"><h2>Guest feedback waiting for approval (${list.length})</h2>
+    <p class="hint">Sent by guests through the form on the Testimonials page. Nothing appears on the website until you approve it and press Save changes. The contact detail is private and never published.</p>
+    ${list.length ? `<div class="editor-list">${list.map(x => `<article class="editor-card no-photo feedback-card"><div class="editor-fields">
+      <p class="feedback-meta"><strong>${esc(x.name)}</strong> · <span class="feedback-stars">${starsText(x.rating)}</span> ${x.rating} · ${esc(new Date(String(x.created_at).replace(" ", "T")).toLocaleString())}${x.contact ? ` · <span class="feedback-contact">Contact: ${esc(x.contact)}</span>` : ""}</p>
+      <p class="feedback-text" dir="${x.lang === "ar" ? "rtl" : "ltr"}">${esc(x.message)}</p>
+      ${x.consent ? "" : `<p class="feedback-private">Private feedback — the guest did not agree to publication, so it cannot be added to the website.</p>`}
+    </div><div class="card-actions">${x.consent ? `<button class="primary" data-approve="${x.id}">Approve</button>` : ""}<button class="remove-btn" title="${x.consent ? "Dismiss" : "Mark as read"}" data-dismiss="${x.id}">×</button></div></article>`).join("")}</div>` : `<p class="hint">No new feedback.</p>`}
+    <p class="hint"><a href="../review-card.html" target="_blank" rel="noopener">Print table cards with the Google review QR code ↗</a></p>
+  </section>`;
+}
+
 function renderReviews() {
   heading("REVIEW MANAGER", "Verified customer feedback.");
-  adminWorkspace.innerHTML = `<section class="panel"><div class="toolbar"><button id="addReview" class="primary">+ Add review</button></div>
+  if (pendingFeedback === null) loadFeedback();
+  adminWorkspace.innerHTML = feedbackPanel() + `<section class="panel"><h2>Published reviews</h2><div class="toolbar"><button id="addReview" class="primary">+ Add review</button></div>
     <p class="hint">Only add genuine reviews from real customers (for example copied from Google), with their permission.</p>
     <div class="editor-list">${data.reviews.map((x, i) => {
       const d = `data-type="reviews" data-i="${i}"`;
@@ -338,6 +363,24 @@ adminWorkspace.addEventListener("click", e => {
     if (j >= 0 && j < list.length) { [list[i], list[j]] = [list[j], list[i]]; setDirty(); render(); }
     return;
   }
+  const approve = e.target.closest("[data-approve]");
+  if (approve) {
+    const x = (pendingFeedback || []).find(f => f.id === +approve.dataset.approve && f.consent);
+    if (x) {
+      data.reviews.unshift({en: x.lang === "ar" ? "" : x.message, ar: x.lang === "ar" ? x.message : "", name: x.name, rating: x.rating, feedbackId: x.id});
+      setDirty(); render(); toast("Added to the reviews below — add a translation if you like, then press Save changes");
+    }
+    return;
+  }
+  const dismiss = e.target.closest("[data-dismiss]");
+  if (dismiss) {
+    if (!confirm("Dismiss this feedback? It will not be published.")) return;
+    const id = +dismiss.dataset.dismiss;
+    request(`${API}?action=feedback-status`, {method: "POST", body: JSON.stringify({ids: [id], status: "dismissed"})})
+      .then(() => { pendingFeedback = pendingFeedback.filter(f => f.id !== id); render(); toast("Feedback dismissed"); })
+      .catch(err => toast(err.message, true));
+    return;
+  }
   const auto = e.target.closest("[data-auto-photo]");
   if (auto) { const x = data.menu[+auto.dataset.autoPhoto]; x.customImage = false; setDirty(); render(); }
 });
@@ -396,6 +439,12 @@ saveAll.onclick = async () => {
   try {
     const r = await request(`${API}?action=content`, {method: "POST", body: JSON.stringify(data)});
     updatedAt = r.savedAt || new Date().toISOString(); setDirty(false); toast("Changes published successfully");
+    const approvedIds = data.reviews.map(x => x.feedbackId).filter(id => (pendingFeedback || []).some(f => f.id === id));
+    if (approvedIds.length) {
+      request(`${API}?action=feedback-status`, {method: "POST", body: JSON.stringify({ids: approvedIds, status: "approved"})})
+        .then(() => { pendingFeedback = pendingFeedback.filter(f => !approvedIds.includes(f.id)); if (view === "reviews") render(); })
+        .catch(() => {});
+    }
     if (view === "dashboard") render();
   } catch (err) { toast(err.message, true); } finally { saveAll.disabled = false; }
 };

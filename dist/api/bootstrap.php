@@ -63,6 +63,22 @@ $pdo->exec("CREATE TABLE IF NOT EXISTS nuzha_login_attempts (
  INDEX attempt_lookup (ip_hash, attempted_at)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci");
 
+// Guest feedback sent from the Testimonials page; nothing is published until an admin approves it.
+$pdo->exec("CREATE TABLE IF NOT EXISTS nuzha_feedback (
+ id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+ name VARCHAR(80) NOT NULL,
+ rating DECIMAL(2,1) NOT NULL,
+ message TEXT NOT NULL,
+ contact VARCHAR(120) NULL,
+ consent TINYINT(1) NOT NULL DEFAULT 0,
+ lang CHAR(2) NOT NULL DEFAULT 'en',
+ ip_hash CHAR(64) NOT NULL,
+ status ENUM('pending','approved','dismissed') NOT NULL DEFAULT 'pending',
+ created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+ INDEX feedback_status (status, created_at),
+ INDEX feedback_ip (ip_hash, created_at)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci");
+
 function json_response(array $payload, int $status = 200): never {
     http_response_code($status);
     header('Content-Type: application/json; charset=utf-8');

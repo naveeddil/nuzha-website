@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Google Review Table Cards | Nuzha Restaurant</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Fraunces:opsz,wght@9..144,600;9..144,700&family=Noto+Kufi+Arabic:wght@600;700&family=Tajawal:wght@500;700&display=swap" rel="stylesheet">
+<!-- Printable table cards: four A6 cards on one A4 sheet. Cut along the dashed lines.
+     The QR code (assets/google-review-qr.svg) opens Nuzha's Google "write a review" form. -->
+<style>
+  :root{--ink:#17382e;--gold:#e0a82e;--accent:#e8572a;--paper:#fffaf1;--cream:#f6eddd}
+  *{box-sizing:border-box}
+  body{margin:0;background:#e9e3d8;font-family:"DM Sans",Arial,sans-serif;color:var(--ink)}
+  .toolbar{display:flex;flex-wrap:wrap;gap:14px;align-items:center;justify-content:center;padding:18px;font-size:15px}
+  .toolbar button{background:var(--accent);color:#fff;border:0;border-radius:999px;padding:12px 22px;font:700 15px "DM Sans",Arial,sans-serif;cursor:pointer}
+  .sheet{width:210mm;height:297mm;margin:0 auto 30px;background:#fff;display:grid;grid-template-columns:1fr 1fr;grid-template-rows:1fr 1fr;box-shadow:0 10px 40px rgba(0,0,0,.15)}
+  .card{border:0.3mm dashed #c9bfae;padding:9mm 8mm;display:flex;flex-direction:column;align-items:center;justify-content:space-between;text-align:center;background:var(--paper);position:relative;overflow:hidden}
+  .card:before{content:"";position:absolute;inset:4mm;border:0.6mm solid var(--gold);border-radius:5mm;pointer-events:none}
+  .brand{display:flex;align-items:center;gap:3mm}
+  .brand img{width:16mm;height:auto}
+  .brand strong{display:block;font-family:Fraunces,Georgia,serif;font-size:5.2mm;line-height:1.05}
+  .brand small{display:block;font-family:"Noto Kufi Arabic",Tahoma,sans-serif;font-size:3.2mm;font-weight:700}
+  .ask{font-family:Fraunces,Georgia,serif;font-size:6.4mm;line-height:1.15;margin:0}
+  .ask-ar{font-family:"Noto Kufi Arabic",Tahoma,sans-serif;font-size:5mm;line-height:1.4;margin:0;direction:rtl}
+  .qr{width:46mm;height:46mm;padding:2mm;background:#fff;border-radius:3mm;box-shadow:0 0 0 0.6mm var(--ink)}
+  .qr img{width:100%;height:100%;display:block}
+  .stars{color:var(--gold);font-size:6mm;letter-spacing:1mm;line-height:1}
+  .scan{font-weight:700;font-size:3.7mm;margin:0}
+  .scan-ar{font-family:Tajawal,Tahoma,sans-serif;font-weight:700;font-size:4mm;margin:0;direction:rtl}
+  .thanks{font-size:3mm;color:#5e6b63;margin:0}
+  @page{size:A4;margin:0}
+  @media print{body{background:#fff}.toolbar{display:none}.sheet{margin:0;box-shadow:none}}
+</style>
+</head>
+<body>
+  <div class="toolbar"><span>Four cards per A4 sheet. Print at 100% (actual size), then cut along the dashed lines.</span><button type="button" onclick="window.print()">Print cards</button></div>
+  <main class="sheet" id="sheet"></main>
+  <template id="cardTemplate">
+    <section class="card">
+      <div class="brand"><img src="assets/logo.png" alt=""><div><strong>Nuzha Restaurant</strong><small>مطعم ومطبخ النزهة</small></div></div>
+      <div><p class="ask">Enjoyed your meal?</p><p class="ask-ar">استمتعت بوجبتك؟</p></div>
+      <div class="qr"><img src="assets/google-review-qr.svg" alt="QR code to rate Nuzha Restaurant on Google"></div>
+      <div class="stars" aria-hidden="true">★★★★★</div>
+      <div><p class="scan">Scan to rate us on Google</p><p class="scan-ar">امسح الرمز وقيّمنا على جوجل</p></div>
+      <p class="thanks">Thank you for dining with us · شكراً لزيارتكم</p>
+    </section>
+  </template>
+  <script>
+    const sheet = document.querySelector("#sheet"), card = document.querySelector("#cardTemplate");
+    for (let i = 0; i < 4; i++) sheet.appendChild(card.content.cloneNode(true));
+  </script>
+</body>
+</html>

@@ -23,3 +23,9 @@
 /* The one-time setup token is only needed before the first administrator exists. */
 [hidden],.auth-card label[hidden]{display:none!important}
 .auth-card .primary{border:0;border-radius:999px;padding:14px 18px;font-weight:700;font-size:16px;cursor:pointer;background:var(--accent);color:#fff}.auth-card .primary:disabled{opacity:.6;cursor:wait}
+/* Guest feedback waiting for approval */
+.feedback-card .card-actions{align-items:start}.feedback-card .card-actions .primary{width:auto;height:auto;padding:9px 16px;font-size:14px;background:var(--accent,#e8572a);color:#fff;border:0}
+.feedback-meta{margin:0 0 6px;font-size:14px}.feedback-stars{color:#d9a227;letter-spacing:.05em}.feedback-contact{color:#8a6d3b}
+.feedback-text{margin:0;font-size:15px;line-height:1.6;white-space:pre-wrap}
+.feedback-private{margin:8px 0 0;font-size:13px;color:#a0442a;font-weight:600}
+.feedback-card .editor-fields{display:block}

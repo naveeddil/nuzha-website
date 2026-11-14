@@ -22,3 +22,27 @@
 .reviews-wrap .menu-note.event-note{margin-top:50px}
 @media(max-width:1180px){.reviews-hero{grid-template-columns:1fr;padding-top:140px}.reviews-side{grid-template-columns:repeat(2,minmax(0,1fr))}}@media(max-width:900px){.reviews-hero{padding-top:130px}}@media(max-width:680px){.reviews-side{grid-template-columns:1fr}}
 @media(max-width:520px){.reviews-hero h1{font-size:56px}.overview-score strong{font-size:56px}}
+/* Why families choose Nuzha */
+.why-nuzha{margin-top:80px}.why-head h2,.feedback-intro h2{font-size:clamp(36px,4.6vw,60px);letter-spacing:-.03em;margin:0 0 26px}
+.why-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:18px}.why-grid article{background:var(--cream);border-radius:20px;padding:26px}
+.why-icon{font-size:28px}.why-grid h3{font-family:var(--display);font-size:22px;margin:12px 0 8px;color:var(--ink)}html[dir=rtl] .why-grid h3{font-family:var(--arabic-heading)}.why-grid p{margin:0;line-height:1.6;color:var(--muted)}
+/* Guest feedback form */
+.feedback-section{margin-top:80px;display:grid;grid-template-columns:minmax(0,.8fr) minmax(0,1.2fr);gap:5vw;align-items:start}
+.feedback-intro p:not(.eyebrow){color:var(--muted);line-height:1.7;font-size:17px}
+.feedback-form{background:var(--cream);border-radius:24px;padding:30px;box-shadow:var(--shadow);display:grid;grid-template-columns:1fr 1fr;gap:18px}
+.feedback-form .wide{grid-column:1/-1}
+.feedback-form label{display:grid;gap:7px;font-weight:600;font-size:14px;color:var(--ink)}
+.feedback-form input:not([type=radio]):not([type=checkbox]),.feedback-form textarea{font:inherit;font-weight:400;font-size:16px;padding:12px 14px;border:1px solid color-mix(in srgb,var(--ink) 20%,transparent);border-radius:12px;background:var(--paper);color:var(--ink);width:100%;box-sizing:border-box}
+.feedback-form textarea{resize:vertical}
+.feedback-form input:focus,.feedback-form textarea:focus{outline:2px solid var(--gold);outline-offset:1px}
+.rating-input{border:0;padding:0;margin:0;min-width:0}.rating-input legend{font-weight:600;font-size:14px;color:var(--ink);padding:0;margin-bottom:7px}
+.rating-stars{display:inline-flex;flex-direction:row-reverse;gap:4px}
+.rating-stars input{position:absolute;opacity:0;width:1px;height:1px}
+.feedback-form .rating-stars label{font-size:34px;line-height:1;cursor:pointer;color:color-mix(in srgb,var(--gold) 30%,transparent);display:block}
+.feedback-form .rating-stars input:checked~label,.feedback-form .rating-stars label:hover,.feedback-form .rating-stars label:hover~label{color:var(--gold)}
+.rating-stars input:focus-visible+label{outline:2px solid var(--gold);border-radius:4px}
+.feedback-form .consent{grid-template-columns:auto 1fr;align-items:start;font-weight:500}.feedback-form .consent input{margin-top:3px;width:18px;height:18px;accent-color:var(--accent)}
+.feedback-hp{position:absolute!important;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap;opacity:0;pointer-events:none}
+.feedback-actions{display:flex;flex-wrap:wrap;align-items:center;gap:16px}.form-status{margin:0;font-weight:600}.form-status.ok{color:#2e7d4f}.form-status.error{color:#c0392b}
+@media(max-width:1000px){.why-grid{grid-template-columns:repeat(2,1fr)}.feedback-section{grid-template-columns:1fr}}
+@media(max-width:560px){.why-grid,.feedback-form{grid-template-columns:1fr}}

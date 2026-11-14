@@ -63,4 +63,23 @@ if ($action === 'upload' && $method === 'POST') {
     if (!move_uploaded_file($file['tmp_name'], $destination)) json_response(['ok' => false, 'error' => 'Could not store image.'], 500);
     chmod($destination, 0644); json_response(['ok' => true, 'path' => 'uploads/gallery/' . $name]);
 }
+if ($action === 'feedback' && $method === 'GET') {
+    // Guest feedback waiting for review (sent from the Testimonials page form).
+    require_admin();
+    $rows = $pdo->query("SELECT id, name, rating, message, contact, consent, lang, created_at FROM nuzha_feedback WHERE status = 'pending' ORDER BY created_at DESC LIMIT 200")->fetchAll();
+    foreach ($rows as &$row) { $row['id'] = (int)$row['id']; $row['rating'] = (float)$row['rating']; $row['consent'] = (bool)$row['consent']; }
+    unset($row);
+    json_response(['ok' => true, 'feedback' => $rows]);
+}
+if ($action === 'feedback-status' && $method === 'POST') {
+    require_admin(); require_csrf();
+    $input = request_json();
+    $status = (string)($input['status'] ?? '');
+    $ids = array_values(array_filter(array_map('intval', (array)($input['ids'] ?? [])), static fn(int $id): bool => $id > 0));
+    if (!in_array($status, ['approved', 'dismissed'], true) || !$ids || count($ids) > 200) json_response(['ok' => false, 'error' => 'Invalid request.'], 422);
+    $placeholders = implode(',', array_fill(0, count($ids), '?'));
+    $stmt = $pdo->prepare("UPDATE nuzha_feedback SET status = ? WHERE id IN ($placeholders)");
+    $stmt->execute([$status, ...$ids]);
+    json_response(['ok' => true]);
+}
 json_response(['ok' => false, 'error' => 'Unknown operation.'], 404);
