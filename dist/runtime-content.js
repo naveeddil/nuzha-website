@@ -146,6 +146,11 @@
       const body = allowedFonts.has(settings.arabicBodyFont) ? settings.arabicBodyFont : "Tajawal";
       document.documentElement.style.setProperty("--arabic-heading", `"${heading}",sans-serif`);
       document.documentElement.style.setProperty("--arabic-body", `"${body}",sans-serif`);
+      // Image files that were renamed or removed after content was saved in the admin portal.
+      const renamed = {"assets/hero-clean.png": "assets/hero-clean.jpg", "assets/feast-clean.png": "assets/feast-clean.jpg", "assets/rice-clean.png": "assets/rice-clean.jpg", "gallery-images/feasts--whole-lamb-platter.png": "gallery-images/feasts--whole-lamb-platter.jpg", "gallery-images/kitchen--moussaka.png": "gallery-images/kitchen--moussaka.jpg", "gallery-images/salads--fattoush.png": "gallery-images/salads--fattoush.jpg", "gallery-images/salads--tabbouleh.png": "gallery-images/salads--tabbouleh.jpg"};
+      const removed = new Set(["gallery-images/dishes--special-plate.png"]);
+      if (Array.isArray(content.gallery)) content.gallery = content.gallery.filter(x => !removed.has(x?.src)).map(x => ({...x, src: renamed[x.src] || x.src}));
+      if (Array.isArray(content.menu)) content.menu = content.menu.map(x => ({...x, image: removed.has(x?.image) ? "assets/logo.png" : (renamed[x?.image] || x?.image)}));
       window.NUZHA_SERVER_CONTENT = content;
       window.dispatchEvent(new CustomEvent("nuzha:content", {detail: content}));
       applyAll();

@@ -60,16 +60,16 @@ window.NUZHA_MENU = [
 
   // Appetizers / مقبلات نزهة
   nuzhaItem("appetizers","Mixed appetizers","مقبلات","12",{missingImage:false}),
-  nuzhaItem("appetizers","Green salad","سلطة خضرة","6",{image:"gallery-images/salads--fattoush.png"}),
+  nuzhaItem("appetizers","Green salad","سلطة خضرة","6",{image:"gallery-images/salads--fattoush.jpg"}),
   nuzhaItem("appetizers","Grape-leaf salad","ورق عنب","7"),
-  nuzhaItem("appetizers","Tabbouleh salad","تبولة","6",{image:"gallery-images/salads--tabbouleh.png",missingImage:false}),
+  nuzhaItem("appetizers","Tabbouleh salad","تبولة","6",{image:"gallery-images/salads--tabbouleh.jpg",missingImage:false}),
   nuzhaItem("appetizers","Hummus","حمص","7"),
   nuzhaItem("appetizers","Mutabbal","متبل","7"),
   nuzhaItem("appetizers","Cucumber and mint yogurt","خيار باللبن","5"),
   nuzhaItem("appetizers","Cucumber lassi","خيار بالزبادي","5"),
 
   // Curries / إيدامات نزهة
-  nuzhaItem("curries","Brinjal / eggplant curry","مسقع","7",{image:"gallery-images/kitchen--moussaka.png",missingImage:false}),
+  nuzhaItem("curries","Brinjal / eggplant curry","مسقع","7",{image:"gallery-images/kitchen--moussaka.jpg",missingImage:false}),
   nuzhaItem("curries","Lady finger curry","بامية","7"),
   nuzhaItem("curries","Mixed vegetable curry","خضار مشكل","7"),
   nuzhaItem("curries","Spinach / saag","ملوخية","7",{reviewEn:"English says spinach/saag while Arabic says molokhia; confirm the dish.",reviewAr:"الإنجليزية تذكر السبانخ بينما العربية تذكر الملوخية؛ يرجى التأكيد."}),
