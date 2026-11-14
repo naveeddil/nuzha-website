@@ -20,3 +20,6 @@
 @media(max-width:900px){.photo-col img{width:80px!important;height:80px!important}}
 @media(max-width:560px){.editor-card{grid-template-columns:1fr}.photo-col{justify-items:start}.card-actions{display:flex}.photo-col img{display:block!important}}
 .settings-grid label.check,.editor-fields label.check{display:flex;font-size:14px}.top-actions a,.top-actions button{white-space:nowrap}
+/* The one-time setup token is only needed before the first administrator exists. */
+[hidden],.auth-card label[hidden]{display:none!important}
+.auth-card .primary{border:0;border-radius:999px;padding:14px 18px;font-weight:700;font-size:16px;cursor:pointer;background:var(--accent);color:#fff}.auth-card .primary:disabled{opacity:.6;cursor:wait}
