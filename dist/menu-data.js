@@ -8,7 +8,67 @@ const NUZHA_MENU_META={
   appetizers:{descEn:"A fresh house appetizer, prepared to order.",descAr:"مقبل طازج من إعداد المطعم يحضر عند الطلب.",image:"gallery-images/salads--mezze-platter.jpg"},
   curries:{descEn:"Slow-cooked with a balanced blend of aromatic spices.",descAr:"مطهو على مهل بمزيج متوازن من البهارات العطرية.",image:"gallery-images/kitchen--ready-to-serve.jpg"}
 };
-function nuzhaItem(category,nameEn,nameAr,price,options={}){const meta=NUZHA_MENU_META[category];return {category,nameEn,nameAr,descEn:options.descEn||meta.descEn,descAr:options.descAr||meta.descAr,price,image:options.image||meta.image,missingImage:options.missingImage??true,priceMissing:price==="—",needsReview:!!options.reviewEn,reviewEn:options.reviewEn||"",reviewAr:options.reviewAr||""}}
+// Item-specific descriptions, keyed "category|nameEn" -> [English, Arabic]. They describe each dish plainly;
+// confirm wording with the restaurant and edit here or in Admin -> Menu. Items without an entry use the category text.
+const NUZHA_MENU_DESCRIPTIONS={
+  "bbq|Beef barbecue":["Cubes of seasoned beef, threaded on skewers and grilled over charcoal until smoky and tender.","قطع لحم متبلة تشك في الأسياخ وتشوى على الفحم حتى تصبح طرية بنكهة مدخنة."],
+  "bbq|Lamb ribs":["Lamb ribs marinated with Nuzha spices and grilled over charcoal for a crisp, smoky finish.","ريش غنم متبلة ببهارات النزهة ومشوية على الفحم بقشرة مقرمشة ونكهة مدخنة."],
+  "bbq|Chicken kebab":["Minced chicken blended with onion and spices, shaped on skewers and grilled over charcoal.","دجاج مفروم مع البصل والبهارات، يشكل على الأسياخ ويشوى على الفحم."],
+  "bbq|Barbecue quail":["Whole quail, seasoned and grilled over charcoal — small birds with rich, delicate meat.","طيور سمان كاملة متبلة ومشوية على الفحم، لحمها طري وغني بالنكهة."],
+  "bbq|Half charcoal chicken with bread":["Half a chicken, marinated and grilled over charcoal, served with Arabic bread.","نصف دجاجة متبلة ومشوية على الفحم، تقدم مع الخبز العربي."],
+  "bbq|Meat kebab (kofta)":["Minced meat mixed with onion and spices, shaped on skewers and grilled over charcoal.","لحم مفروم مع البصل والبهارات، يشكل على الأسياخ ويشوى على الفحم."],
+  "bbq|Grilled chicken":["A whole seasoned chicken, roasted on the grill and served plain, without rice.","دجاجة كاملة متبلة ومشوية، تقدم سادة بدون أرز."],
+  "bbq|Chicken pieces with fries and salad":["Shish tawook: marinated boneless chicken pieces grilled on skewers, served with fries and salad.","شيش طاووق: قطع دجاج مسحبة متبلة ومشوية على الأسياخ، تقدم مع البطاطس المقلية والسلطة."],
+  "bbq|Mixed BBQ plate":["An assortment of our charcoal grills on one plate — a little of everything.","تشكيلة من مشوياتنا على الفحم في طبق واحد، لتتذوق القليل من كل صنف."],
+  "bbq|Mixed barbecue — half kilogram":["Half a kilogram of assorted charcoal grills, made for sharing.","نصف كيلو من المشويات المشكلة على الفحم، مثالي للمشاركة."],
+  "bbq|Mixed barbecue — one kilogram":["A full kilogram of assorted charcoal grills — a generous platter for family and friends.","كيلو كامل من المشويات المشكلة على الفحم، طبق سخي للعائلة والأصدقاء."],
+  "breakfast|Hummus":["Smooth chickpea purée with tahini, lemon and olive oil — a breakfast classic.","حمص ناعم بالطحينة والليمون وزيت الزيتون، طبق فطور كلاسيكي."],
+  "breakfast|Liver with tomato":["Diced liver sautéed with tomato, onion and green chilli.","كبدة مقطعة مقلية مع الطماطم والبصل والفلفل الأخضر."],
+  "breakfast|Liver with kidney":["A hearty mix of liver and kidneys, pan-cooked with onion and spices.","مزيج شهي من الكبدة والكلاوي مطهو في المقلاة مع البصل والبهارات."],
+  "breakfast|Mutton kidneys":["Mutton kidneys pan-fried with onion and spices.","كلاوي غنم مقلية مع البصل والبهارات."],
+  "breakfast|Meat with tomato":["Small pieces of meat cooked with fresh tomato and onion.","قطع لحم صغيرة مطهوة مع الطماطم الطازجة والبصل."],
+  "breakfast|Full fried eggs":["Fried eggs cooked through, with firm yolks.","بيض عيون مستوٍ بالكامل مع صفار متماسك."],
+  "breakfast|Half-fried eggs":["Fried eggs with soft, runny yolks.","بيض عيون نصف استواء مع صفار طري."],
+  "breakfast|Lentil soup":["A warm, comforting lentil soup, gently spiced.","شوربة عدس دافئة بتتبيلة خفيفة."],
+  "breakfast|Foul":["Slow-cooked fava beans with olive oil, cumin and lemon.","فول مدمس مطهو على مهل مع زيت الزيتون والكمون والليمون."],
+  "breakfast|Egg omelet":["Eggs cooked with tomato, onion and peppers, shakshuka style.","بيض مطهو مع الطماطم والبصل والفلفل على طريقة الشكشوكة."],
+  "rice|Mandi chicken rice — quarter":["A quarter chicken cooked mandi-style, served on fragrant mandi rice.","ربع دجاجة مطهوة على طريقة المندي، تقدم على أرز المندي العطري."],
+  "rice|Mandi chicken rice — half":["Half a chicken cooked mandi-style, served on fragrant mandi rice.","نصف دجاجة مطهوة على طريقة المندي، تقدم على أرز المندي العطري."],
+  "rice|Mandi chicken rice — whole":["A whole chicken cooked mandi-style on a platter of fragrant mandi rice — enough to share.","دجاجة كاملة مطهوة على طريقة المندي على صحن من أرز المندي العطري، تكفي للمشاركة."],
+  "rice|Fresh mandi meat with rice — single":["A single portion of fresh local meat, cooked mandi-style until tender and served on mandi rice.","حصة فردية من اللحم البلدي الطازج مطهوة على طريقة المندي حتى تصبح طرية، تقدم على أرز المندي."],
+  "rice|Grilled chicken rice — quarter":["A quarter chicken roasted on the grill (shawaya), served on seasoned rice.","ربع دجاجة شواية تقدم على الأرز المتبل."],
+  "rice|Grilled chicken rice — half":["Half a chicken roasted on the grill (shawaya), served on seasoned rice.","نصف دجاجة شواية تقدم على الأرز المتبل."],
+  "rice|Grilled chicken rice — whole":["A whole chicken roasted on the grill (shawaya), served on a platter of seasoned rice.","دجاجة شواية كاملة تقدم على صحن من الأرز المتبل."],
+  "rice|Plain rice":["A side of plain, fluffy rice.","طبق جانبي من الأرز السادة."],
+  "rice|BBQ chicken rice — half":["Half a chicken grilled over charcoal, served on seasoned rice.","نصف دجاجة مشوية على الفحم تقدم على الأرز المتبل."],
+  "rice|BBQ chicken rice — whole":["A whole chicken grilled over charcoal, served on a platter of seasoned rice.","دجاجة كاملة مشوية على الفحم تقدم على صحن من الأرز المتبل."],
+  "rice|Imported meat with rice":["Kabsa of imported meat, cooked with Saudi spices and served on kabsa rice.","كبسة لحم مستورد مطهوة بالبهارات السعودية وتقدم على أرز الكبسة."],
+  "rice|Mandi rice":["A side of smoky, fragrant mandi rice.","طبق جانبي من أرز المندي العطري."],
+  "rice|Biryani rice":["A side of biryani rice, cooked with aromatic whole spices.","طبق جانبي من أرز البرياني المطهو بالبهارات العطرية."],
+  "rice|Bukhari rice":["A side of Bukhari rice, cooked with carrots and raisins.","طبق جانبي من الرز البخاري المطهو مع الجزر والزبيب."],
+  "rice|White rice":["A side of steamed white rice.","طبق جانبي من الأرز الأبيض."],
+  "fried|Fried fish":["Whole fish fried until golden and crisp. Priced by weight — ask our team for today's sizes.","سمك كامل مقلي حتى يصبح ذهبياً ومقرمشاً. السعر حسب الوزن — اسأل فريقنا عن الأحجام المتوفرة اليوم."],
+  "fried|Broasted chicken with fries":["Crispy, golden broasted chicken pieces served with French fries.","قطع دجاج بروستد ذهبية ومقرمشة تقدم مع البطاطس المقلية."],
+  "fried|French fries":["Golden, crispy French fries.","بطاطس مقلية ذهبية ومقرمشة."],
+  "appetizers|Mixed appetizers":["A sharing selection of our cold appetizers.","تشكيلة من مقبلاتنا الباردة للمشاركة."],
+  "appetizers|Green salad":["Fresh chopped vegetables — tomato, cucumber, lettuce and onion — with a light dressing.","خضار طازجة مقطعة — طماطم وخيار وخس وبصل — مع تتبيلة خفيفة."],
+  "appetizers|Grape-leaf salad":["Vine leaves rolled around seasoned rice, served cool.","ورق عنب ملفوف بالأرز المتبل، يقدم بارداً."],
+  "appetizers|Tabbouleh salad":["Finely chopped parsley with tomato, onion, bulgur, lemon and olive oil.","بقدونس مفروم ناعماً مع الطماطم والبصل والبرغل والليمون وزيت الزيتون."],
+  "appetizers|Hummus":["Smooth chickpea purée with tahini, lemon and olive oil.","حمص ناعم بالطحينة والليمون وزيت الزيتون."],
+  "appetizers|Mutabbal":["Smoky roasted eggplant blended with tahini and lemon.","باذنجان مشوي بنكهة مدخنة مهروس مع الطحينة والليمون."],
+  "appetizers|Cucumber and mint yogurt":["Cool yogurt with diced cucumber and mint.","لبن بارد مع الخيار المقطع والنعناع."],
+  "appetizers|Cucumber lassi":["Chilled yogurt with cucumber — a refreshing side for grills and rice.","زبادي بارد مع الخيار، طبق جانبي منعش مع المشويات والأرز."],
+  "curries|Brinjal / eggplant curry":["Eggplant cooked in a spiced tomato sauce with onion and green chilli.","باذنجان مطهو في صلصة طماطم متبلة مع البصل والفلفل الأخضر."],
+  "curries|Lady finger curry":["Okra simmered in a rich tomato sauce with garlic and spices.","بامية مطهوة في صلصة طماطم غنية بالثوم والبهارات."],
+  "curries|Mixed vegetable curry":["Potato, carrot, peas and beans, slow-cooked in a light tomato curry.","بطاطس وجزر وبازلاء وفاصوليا مطهوة على مهل في مرق طماطم خفيف."],
+  "curries|Spinach / saag":["Finely chopped greens cooked with garlic and spices.","خضار ورقية مفرومة ناعماً مطهوة مع الثوم والبهارات."],
+  "curries|Potato with meat":["Tender meat and potatoes simmered together in a spiced curry.","لحم طري وبطاطس مطهوة معاً في مرق متبل."],
+  "curries|Chicken curry":["Chicken pieces cooked in a spiced onion-and-tomato gravy.","قطع دجاج مطهوة في مرق متبل بالبصل والطماطم."],
+  "curries|Lentils":["Yellow lentils (daal) cooked until creamy, finished with fried onion and spices.","عدس أصفر (دال) مطهو حتى يصبح كريمياً، ويزين بالبصل المقلي والبهارات."],
+  "curries|Mutton curry":["Mutton slow-cooked in a rich, spiced gravy.","لحم غنم مطهو على مهل في مرق غني بالبهارات."]
+};
+window.NUZHA_MENU_DESCRIPTIONS=NUZHA_MENU_DESCRIPTIONS;window.NUZHA_MENU_META=NUZHA_MENU_META;
+function nuzhaItem(category,nameEn,nameAr,price,options={}){const meta=NUZHA_MENU_META[category],own=NUZHA_MENU_DESCRIPTIONS[`${category}|${nameEn}`]||[];return {category,nameEn,nameAr,descEn:options.descEn||own[0]||meta.descEn,descAr:options.descAr||own[1]||meta.descAr,price,image:options.image||meta.image,missingImage:options.missingImage??true,priceMissing:price==="—",needsReview:!!options.reviewEn,reviewEn:options.reviewEn||"",reviewAr:options.reviewAr||""}}
 window.NUZHA_MENU = [
   // Barbecue grills / مشويات نزهة
   nuzhaItem("bbq","Beef barbecue","أوصال لحم","35",{reviewEn:"Arabic panel shows SAR 25; confirm the price.",reviewAr:"السعر في الجانب العربي ٢٥ ر.س؛ يرجى التأكيد."}),
@@ -54,7 +114,7 @@ window.NUZHA_MENU = [
   nuzhaItem("rice","White rice","رز أبيض","7"),
 
   // Fried and fish / بروستد وأسماك
-  nuzhaItem("fried","Fried fish","سمك مقلي حسب الحجم","—",{missingImage:false,descEn:"Whole fish fried until crisp; the CDR prices it according to weight.",descAr:"سمك كامل مقلي ومقرمش؛ السعر حسب الوزن."}),
+  nuzhaItem("fried","Fried fish","سمك مقلي حسب الحجم","—",{missingImage:false}),
   nuzhaItem("fried","Broasted chicken with fries","بروستد كندادي","19",{image:"assets/grill.jpg"}),
   nuzhaItem("fried","French fries","بطاطس مقلي","6",{image:"assets/logo.png"}),
 

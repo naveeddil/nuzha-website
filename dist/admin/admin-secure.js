@@ -88,6 +88,9 @@ async function openPortal() {
   const removedFiles = new Set(["gallery-images/dishes--special-plate.png"]);
   data.gallery = data.gallery.filter(x => !removedFiles.has(x.src)).map(x => ({...x, src: renamed[x.src] || x.src}));
   data.menu.forEach(x => { if (renamed[x.image]) x.image = renamed[x.image]; if (removedFiles.has(x.image)) x.image = "assets/logo.png"; });
+  // Saved menus may still carry the old one-per-category descriptions; replace those with the item-specific text from menu-data.js.
+  const genericDesc = new Set(Object.values(window.NUZHA_MENU_META || {}).flatMap(m => [m.descEn, m.descAr]));
+  data.menu.forEach(x => { const own = (window.NUZHA_MENU_DESCRIPTIONS || {})[`${x.category}|${x.nameEn}`]; if (!own) return; if (!x.descEn || genericDesc.has(x.descEn)) x.descEn = own[0]; if (!x.descAr || genericDesc.has(x.descAr)) x.descAr = own[1]; });
   // Photos published with scripts/sync-gallery.mjs appear here automatically unless an admin deleted them.
   data.gallerySuppressed = Array.isArray(data.gallerySuppressed) ? data.gallerySuppressed : [];
   const known = new Set(data.gallery.map(x => x.src)), suppressed = new Set(data.gallerySuppressed);
