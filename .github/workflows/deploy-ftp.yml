@@ -30,7 +30,7 @@ jobs:
 
       - name: Validate JavaScript
         run: |
-          for f in dist/app.js dist/menu.js dist/gallery.js dist/menu-credits.js; do
+          for f in dist/app.js dist/menu.js dist/menu-order.js dist/sw.js dist/gallery.js dist/menu-credits.js; do
             node --check "$f"
           done
 
