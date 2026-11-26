@@ -1,0 +1,8 @@
+[{
+      "relation": ["delegate_permission/common.handle_all_urls"],
+      "target": {
+        "namespace": "android_app",
+        "package_name": "com.nuzharestaurant.www.twa",
+        "sha256_cert_fingerprints": ["08:37:3B:DB:8D:9A:06:62:A5:0F:E5:CE:D2:F5:C3:15:CE:B3:5D:91:D5:24:88:D3:C8:30:FA:87:98:EE:BA:54"]
+      }
+    }]
