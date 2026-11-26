@@ -2,7 +2,7 @@
 // Pages, scripts and saved content: network first, cached copy when offline, so updates appear as soon as the tablet is online.
 // Images and fonts: cached copy first (refreshed in the background). The admin portal and other API calls are never cached.
 // Bump VERSION whenever this file changes.
-const VERSION = "nuzha-menu-v1";
+const VERSION = "nuzha-menu-v2";
 const CORE = ["menu.html", "menu.js", "menu-order.js", "menu-data.js", "runtime-content.js", "seo.js", "styles.css", "menu.css", "menu-flags.css",
   "menu-restaurant-images.json", "menu-open-images.json", "manifest.webmanifest", "assets/logo.png", "assets/app-icon-192.png", "assets/gallery-hero-night.jpg"];
 
