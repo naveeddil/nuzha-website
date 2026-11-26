@@ -59,7 +59,7 @@
 
   // ---------- toolbar: view controls + order button ----------
   const grids = {2: "M3 3h8v8H3zM13 3h8v8h-8zM3 13h8v8H3zM13 13h8v8h-8z", 3: "M2 2h6v6H2zM9 2h6v6H9zM16 2h6v6h-6zM2 9h6v6H2zM9 9h6v6H9zM16 9h6v6h-6zM2 16h6v6H2zM9 16h6v6H9zM16 16h6v6h-6z", 4: "M2 2h4v4H2zM7 2h4v4H7zM12 2h4v4h-4zM17 2h4v4h-4zM2 7h4v4H2zM7 7h4v4H7zM12 7h4v4h-4zM17 7h4v4h-4zM2 12h4v4H2zM7 12h4v4H7zM12 12h4v4h-4zM17 12h4v4h-4zM2 17h4v4H2zM7 17h4v4H7zM12 17h4v4h-4zM17 17h4v4h-4z"};
-  toolbar.insertAdjacentHTML("beforeend", `<div class="menu-view-controls" role="group"><span class="mvc-label"></span>${[2, 3, 4].map(n => `<button type="button" class="mvc-cols" data-cols="${n}"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="${grids[n]}"/></svg></button>`).join("")}<button type="button" class="mvc-text">A+</button></div><button type="button" class="order-open"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4h10l1 3h3v2h-1.2l-1.6 10.2A2 2 0 0 1 16.2 21H7.8a2 2 0 0 1-2-1.8L4.2 9H3V7h3l1-3Zm-.8 5 1.6 10h8.4l1.6-10H6.2Zm2.3-3-.4 1h7.8l-.4-1h-7Z"/></svg><span class="order-open-label"></span><b class="order-count">0</b></button>`);
+  toolbar.insertAdjacentHTML("beforeend", `<div class="menu-view-controls" role="group">${[2, 3, 4].map(n => `<button type="button" class="mvc-cols" data-cols="${n}"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="${grids[n]}"/></svg></button>`).join("")}<button type="button" class="mvc-text">A+</button></div><button type="button" class="order-open"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4h10l1 3h3v2h-1.2l-1.6 10.2A2 2 0 0 1 16.2 21H7.8a2 2 0 0 1-2-1.8L4.2 9H3V7h3l1-3Zm-.8 5 1.6 10h8.4l1.6-10H6.2Zm2.3-3-.4 1h7.8l-.4-1h-7Z"/></svg><span class="order-open-label"></span><b class="order-count">0</b></button>`);
   const viewControls = toolbar.querySelector(".menu-view-controls"), orderOpen = toolbar.querySelector(".order-open");
   function applyView() {
     const cols = store.get("nuzha-cols", ""), big = store.get("nuzha-big-text", false);
@@ -72,6 +72,10 @@
   viewControls.querySelector(".mvc-text").onclick = () => { store.set("nuzha-big-text", !store.get("nuzha-big-text", false)); applyView(); };
   orderOpen.onclick = () => openOrder();
   applyView();
+  // Category chips scroll sideways without a visible scrollbar: mouse wheel scrolls them, and fades show there is more.
+  filters.addEventListener("wheel", e => { if (filters.scrollWidth <= filters.clientWidth || Math.abs(e.deltaX) > Math.abs(e.deltaY)) return; e.preventDefault(); filters.scrollLeft += (document.documentElement.dir === "rtl" ? -1 : 1) * e.deltaY; }, {passive: false});
+  const chipEdges = () => { const max = filters.scrollWidth - filters.clientWidth, x = Math.abs(filters.scrollLeft); filters.classList.toggle("more-start", max > 2 && x > 2); filters.classList.toggle("more-end", max > 2 && x < max - 2); };
+  filters.addEventListener("scroll", chipEdges, {passive: true}); addEventListener("resize", chipEdges); document.addEventListener("nuzha:menu-rendered", () => requestAnimationFrame(chipEdges));
 
   // ---------- quantity controls on cards and in the dish dialog ----------
   const stopKeys = el => el.addEventListener("keydown", e => e.stopPropagation());
@@ -326,7 +330,6 @@
   // ---------- labels and refresh ----------
   function updateTableLabel() { if (tabletBar) tabletBar.querySelector(".tablet-table").textContent = meta.table ? `${T("Table", "الطاولة")} ${meta.table}` : ""; }
   function labelsNow() {
-    viewControls.querySelector(".mvc-label").textContent = T("Photo size", "حجم الصور");
     viewControls.setAttribute("aria-label", T("Photo and text size", "حجم الصور والنص"));
     const names = {2: T("Large photos", "صور كبيرة"), 3: T("Medium photos", "صور متوسطة"), 4: T("Small photos", "صور صغيرة")};
     viewControls.querySelectorAll(".mvc-cols").forEach(b => { b.title = names[b.dataset.cols]; b.setAttribute("aria-label", names[b.dataset.cols]); });

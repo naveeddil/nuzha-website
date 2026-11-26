@@ -185,3 +185,13 @@ html[dir=rtl] .side-drawer{inset:0 0 0 auto;border-radius:26px 0 0 26px;animatio
 @media(max-width:600px){.drawer-open{width:40px;height:40px}.cc-btn span{display:none}.cc-btn{padding:11px}}
 .order-fields input::placeholder,.order-fields textarea::placeholder{color:color-mix(in srgb,var(--muted) 70%,transparent)}
 .cc-num bdi{justify-self:start}
+/* Category chips: no scrollbar; fade at the edge that has more chips */
+.menu-toolbar .filters{scrollbar-width:none;-ms-overflow-style:none;scroll-behavior:smooth}.menu-toolbar .filters::-webkit-scrollbar{display:none}
+.menu-toolbar .filters.more-end{-webkit-mask-image:linear-gradient(to right,#000 calc(100% - 56px),transparent);mask-image:linear-gradient(to right,#000 calc(100% - 56px),transparent)}
+.menu-toolbar .filters.more-start{-webkit-mask-image:linear-gradient(to right,transparent,#000 56px);mask-image:linear-gradient(to right,transparent,#000 56px)}
+.menu-toolbar .filters.more-start.more-end{-webkit-mask-image:linear-gradient(to right,transparent,#000 56px,#000 calc(100% - 56px),transparent);mask-image:linear-gradient(to right,transparent,#000 56px,#000 calc(100% - 56px),transparent)}
+html[dir=rtl] .menu-toolbar .filters.more-end{-webkit-mask-image:linear-gradient(to left,#000 calc(100% - 56px),transparent);mask-image:linear-gradient(to left,#000 calc(100% - 56px),transparent)}
+html[dir=rtl] .menu-toolbar .filters.more-start{-webkit-mask-image:linear-gradient(to left,transparent,#000 56px);mask-image:linear-gradient(to left,transparent,#000 56px)}
+.menu-search{flex:0 0 170px;transition:flex-basis .25s}.menu-search:focus-within{flex-basis:240px}
+@media(max-width:600px){.menu-search,.menu-search:focus-within{flex:1 1 100%}}
+html[dir=rtl] .menu-toolbar .filters.more-start.more-end{-webkit-mask-image:linear-gradient(to left,transparent,#000 56px,#000 calc(100% - 56px),transparent);mask-image:linear-gradient(to left,transparent,#000 56px,#000 calc(100% - 56px),transparent)}
