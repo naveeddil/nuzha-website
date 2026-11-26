@@ -4,7 +4,8 @@
 // - Photo zoom: tap the photo in a dish's details for a full-screen view with pinch, double-tap, wheel and +/- zoom.
 // - View controls: photo size (2/3/4 dishes per row) and larger text, remembered on the device.
 // - Tablet mode (only menu.html?mode=tablet, or the installed app): website header, hero and footer are hidden, a slim
-//   bar with language and "Start new order" is shown, and the table number is kept on the tablet.
+//   bar with language and "Start new order" is shown. The order form asks for name, contact number and notes;
+//   on tablets (app on a screen whose short side is 600 px or more) it also asks for the table number, kept on the device.
 (() => {
   const T = (en, ar) => (lang === "ar" ? ar : en);
   const keyOf = x => `${x.category}|${x.nameEn}`;
@@ -38,7 +39,9 @@
 
   // ---------- order state ----------
   let order = store.get("nuzha-order", []).filter(r => r && r.key && r.qty > 0);
-  let meta = {table: store.get("nuzha-table", ""), name: "", phone: "", notes: ""};
+  // Table number: only in the app on a tablet-sized screen (not on phones or the website).
+  const tableField = tablet && Math.min(screen.width, screen.height) >= 600;
+  let meta = {table: tableField ? store.get("nuzha-table", "") : "", name: "", phone: "", notes: ""};
   const save = () => store.set("nuzha-order", order);
   const qtyOf = key => order.find(r => r.key === key)?.qty || 0;
   const lines = () => order.map(r => ({...r, item: items.find(x => keyOf(x) === r.key && !x.hidden)})).filter(r => r.item);
@@ -142,7 +145,7 @@
   function message() {
     const {total, byWeight} = totals(), out = [];
     out.push(T("New order — Nuzha Restaurant", "طلب جديد — مطعم ومطبخ النزهة"));
-    if (tablet && meta.table) out.push(`${T("Table", "الطاولة")}: ${meta.table}`);
+    if (tableField && meta.table) out.push(`${T("Table", "الطاولة")}: ${meta.table}`);
     if (meta.name) out.push(`${T("Name", "الاسم")}: ${meta.name}`);
     if (meta.phone) out.push(`${T("Contact number", "رقم التواصل")}: ${meta.phone}`);
     out.push("");
@@ -162,7 +165,7 @@
     orderInner.innerHTML = `<header class="order-head"><h2 id="orderTitle">${T("Your order", "طلبك")}</h2><button type="button" class="order-close" aria-label="${T("Close", "إغلاق")}">×</button></header>
       ${rows.length ? `<ul class="order-lines">${rows.map(r => { const p = unitPrice(r.item); return `<li data-key="${escapeHtml(r.key)}"><img src="${escapeHtml(r.item.image)}" alt=""><div class="ol-name"><strong>${escapeHtml(nameOf(r.item))}</strong><small lang="${lang === "ar" ? "en" : "ar"}">${escapeHtml(altOf(r.item))}</small><span>${p === null ? T("Priced by weight", "السعر حسب الوزن") : `${sar(p)} ${T("each", "للواحد")}`}</span></div><div class="dish-qty has-qty"><button type="button" class="q-minus" aria-label="${T("Remove one", "إزالة واحد")}">−</button><span class="q-num">${r.qty}</span><button type="button" class="q-plus" aria-label="${T("Add one more", "إضافة واحد")}">+</button></div><b class="ol-total">${p === null ? "—" : sar(p * r.qty)}</b><button type="button" class="ol-remove" aria-label="${T("Remove dish", "حذف الصنف")}">×</button></li>`; }).join("")}</ul>
       <div class="order-sum"><span>${T("Total", "الإجمالي")}</span><b>${sar(total)}</b></div>${byWeight ? `<p class="order-note">${T("Plus dishes priced by weight — the waiter will confirm.", "بالإضافة إلى أصناف تُسعّر حسب الوزن — سيؤكدها النادل.")}</p>` : ""}
-      <div class="order-fields">${tablet ? `<label><span>${T("Table number", "رقم الطاولة")}</span><input class="of-table" inputmode="numeric" maxlength="8" value="${escapeHtml(meta.table)}"></label>` : ""}<label><span>${T("Name", "الاسم")}</span><input class="of-name" maxlength="60" autocomplete="name" value="${escapeHtml(meta.name)}"></label><label><span>${T("Contact number", "رقم التواصل")}</span><input class="of-phone" type="tel" inputmode="tel" dir="ltr" maxlength="20" autocomplete="tel" placeholder="05x xxx xxxx" value="${escapeHtml(meta.phone)}"></label><label class="wide"><span>${T("Notes for the kitchen", "ملاحظات للمطبخ")}</span><textarea class="of-notes" rows="3" maxlength="300" placeholder="${T("e.g. less spicy, no onion, extra bread", "مثال: حار أقل، بدون بصل، خبز إضافي")}">${escapeHtml(meta.notes)}</textarea></label></div>
+      <div class="order-fields">${tableField ? `<label><span>${T("Table number", "رقم الطاولة")}</span><input class="of-table" inputmode="numeric" maxlength="8" value="${escapeHtml(meta.table)}"></label>` : ""}<label><span>${T("Name", "الاسم")}</span><input class="of-name" maxlength="60" autocomplete="name" value="${escapeHtml(meta.name)}"></label><label class="${tableField ? "wide" : ""}"><span>${T("Contact number", "رقم التواصل")}</span><input class="of-phone" type="tel" inputmode="tel" dir="ltr" maxlength="20" autocomplete="tel" placeholder="05x xxx xxxx" value="${escapeHtml(meta.phone)}"></label><label class="wide"><span>${T("Notes for the kitchen", "ملاحظات للمطبخ")}</span><textarea class="of-notes" rows="3" maxlength="300" placeholder="${T("e.g. less spicy, no onion, extra bread", "مثال: حار أقل، بدون بصل، خبز إضافي")}">${escapeHtml(meta.notes)}</textarea></label></div>
       <p class="order-note">${T("Prices are in Saudi Riyals. Your order is confirmed by our staff.", "الأسعار بالريال السعودي. يتم تأكيد الطلب من قبل فريقنا.")}</p>
       <div class="order-actions"><a class="order-wa" href="#" target="_blank" rel="noreferrer">${eventIconMarkup[1]}<span>${T("Send on WhatsApp", "إرسال عبر واتساب")}</span></a><button type="button" class="order-waiter">${T("Show to the waiter", "اعرض الطلب على النادل")}</button><button type="button" class="order-clear">${T("Start new order", "طلب جديد")}</button></div>`
       : `<p class="order-empty">${T("Your order is empty. Tap “+ Add” on any dish to start.", "طلبك فارغ. اضغط «+ أضف» على أي صنف للبدء.")}</p><div class="order-actions"><button type="button" class="order-back">${T("Browse the menu", "تصفح القائمة")}</button></div>`}`;
@@ -194,7 +197,7 @@
   function openWaiter() {
     const rows = lines(), {total, byWeight} = totals(), now = new Date();
     const time = now.toLocaleTimeString(lang === "ar" ? "ar-SA" : "en-GB", {hour: "2-digit", minute: "2-digit"});
-    waiterInner.innerHTML = `<header><div><p class="eyebrow">${T("ORDER FOR THE WAITER", "الطلب للنادل")}</p><h2 id="waiterTitle">${tablet ? (meta.table ? `${T("Table", "الطاولة")} ${escapeHtml(meta.table)}` : T("Table —", "الطاولة —")) : (escapeHtml(meta.name) || T("Order", "الطلب"))}</h2><span>${time}${meta.name ? ` · ${escapeHtml(meta.name)}` : ""}${meta.phone ? ` · <bdi dir="ltr">${escapeHtml(meta.phone)}</bdi>` : ""}</span></div><b class="w-count">${count()} ${T("items", "أصناف")}</b></header>
+    waiterInner.innerHTML = `<header><div><p class="eyebrow">${T("ORDER FOR THE WAITER", "الطلب للنادل")}</p><h2 id="waiterTitle">${tableField && meta.table ? `${T("Table", "الطاولة")} ${escapeHtml(meta.table)}` : escapeHtml(meta.name) || T("Order", "الطلب")}</h2><span>${time}${meta.name && tableField && meta.table ? ` · ${escapeHtml(meta.name)}` : ""}${meta.phone ? ` · <bdi dir="ltr">${escapeHtml(meta.phone)}</bdi>` : ""}</span></div><b class="w-count">${count()} ${T("items", "أصناف")}</b></header>
       <ol class="waiter-lines">${rows.map(r => { const p = unitPrice(r.item); return `<li><b class="w-qty">${r.qty}×</b><div><strong lang="ar" dir="rtl">${escapeHtml(r.item.nameAr)}</strong><span lang="en" dir="ltr">${escapeHtml(r.item.nameEn)}</span></div><em>${p === null ? T("by weight", "حسب الوزن") : sar(p * r.qty)}</em></li>`; }).join("")}</ol>
       ${meta.notes ? `<p class="waiter-notes"><b>${T("Notes", "ملاحظات")}:</b> ${escapeHtml(meta.notes)}</p>` : ""}
       <div class="waiter-total"><span>${T("Total", "الإجمالي")}</span><b>${sar(total)}${byWeight ? T(" + by weight", " + بالوزن") : ""}</b></div>
@@ -284,8 +287,9 @@
   let drawerView = "main";
   drawer.addEventListener("click", e => { if (e.target === drawer) drawer.close(); });
   const ext = 'target="_blank" rel="noreferrer"';
-  const row = (icon, label, {href = "", action = "", badge = "", external = false} = {}) => {
-    const inner = `<span class="dl-ico">${icon}</span><span class="dl-text">${label}</span>${badge}${ico("chevron", "dl-chev")}`;
+  const row = (icon, label, {href = "", action = "", badge = "", external = false, sub = "", trail = ""} = {}) => {
+    const text = sub ? `<span class="dl-text">${label}<small>${sub}</small></span>` : `<span class="dl-text">${label}</span>`;
+    const inner = `<span class="dl-ico">${icon}</span>${text}${badge}${trail || ico("chevron", "dl-chev")}`;
     return href ? `<a class="dl-item" href="${escapeHtml(href)}" ${external ? ext : ""}>${inner}</a>` : `<button type="button" class="dl-item" data-action="${action}">${inner}</button>`;
   };
   function renderDrawer() {
@@ -305,7 +309,7 @@
           ${row(ico("bag"), T("My order", "طلبي"), {action: "order", badge: n ? `<b class="dl-badge">${n}</b>` : ""})}
           ${row(ico("phone"), T("Contact us", "اتصل بنا"), {action: "contact"})}
           ${row(ico("pin"), T("Directions", "الاتجاهات"), {href: MAPS, external: true})}
-          ${row(ico("calendar"), T("Events & large orders", "المناسبات والطلبات الكبيرة"), {href: `tel:+${toIntl(c.events)}`})}
+          ${row(ico("calendar"), T("Events & large orders", "المناسبات والطلبات الكبيرة"), {href: `tel:+${toIntl(c.events)}`, sub: `<bdi dir="ltr">${escapeHtml(c.events)}</bdi>`, trail: `<span class="dl-call" aria-label="${T("Call", "اتصال")}">${ico("phone")}</span>`})}
           ${row(ico("globe"), lang === "ar" ? "English" : "العربية", {action: "lang"})}
           ${tablet ? "" : `<hr>${row(ico("home"), T("Home", "الرئيسية"), {href: "index.html"})}${row(ico("photos"), T("Gallery", "معرض الصور"), {href: "gallery.html"})}${row(ico("star"), T("Testimonials", "آراء الضيوف"), {href: "reviews.html"})}`}
         </nav>
@@ -328,7 +332,7 @@
   window.addEventListener("hashchange", () => { if (location.hash === "#contact") openDrawer("contact"); });
 
   // ---------- labels and refresh ----------
-  function updateTableLabel() { if (tabletBar) tabletBar.querySelector(".tablet-table").textContent = meta.table ? `${T("Table", "الطاولة")} ${meta.table}` : ""; }
+  function updateTableLabel() { if (tabletBar) tabletBar.querySelector(".tablet-table").textContent = tableField && meta.table ? `${T("Table", "الطاولة")} ${meta.table}` : ""; }
   function labelsNow() {
     viewControls.setAttribute("aria-label", T("Photo and text size", "حجم الصور والنص"));
     const names = {2: T("Large photos", "صور كبيرة"), 3: T("Medium photos", "صور متوسطة"), 4: T("Small photos", "صور صغيرة")};
