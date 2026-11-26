@@ -195,3 +195,5 @@ html[dir=rtl] .menu-toolbar .filters.more-start{-webkit-mask-image:linear-gradie
 .menu-search{flex:0 0 170px;transition:flex-basis .25s}.menu-search:focus-within{flex-basis:240px}
 @media(max-width:600px){.menu-search,.menu-search:focus-within{flex:1 1 100%}}
 html[dir=rtl] .menu-toolbar .filters.more-start.more-end{-webkit-mask-image:linear-gradient(to left,transparent,#000 56px,#000 calc(100% - 56px),transparent);mask-image:linear-gradient(to left,transparent,#000 56px,#000 calc(100% - 56px),transparent)}
+/* Phones: search + My order on one row, categories on their own full-width row */
+@media(max-width:600px){.menu-toolbar{flex-wrap:wrap;gap:10px}.menu-toolbar .drawer-open{order:0}.menu-search,.menu-search:focus-within{flex:1 1 0;min-width:0;order:1}.order-open{flex:0 0 auto;order:2;padding:10px 14px}.menu-toolbar .filters{flex:1 1 100%;order:3}}

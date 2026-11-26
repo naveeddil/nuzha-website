@@ -2,7 +2,7 @@
 // Pages, scripts and saved content: network first, cached copy when offline, so updates appear as soon as the tablet is online.
 // Images and fonts: cached copy first (refreshed in the background). The admin portal and other API calls are never cached.
 // Bump VERSION whenever this file changes.
-const VERSION = "nuzha-menu-v2";
+const VERSION = "nuzha-menu-v3";
 const CORE = ["menu.html", "menu.js", "menu-order.js", "menu-data.js", "runtime-content.js", "seo.js", "styles.css", "menu.css", "menu-flags.css",
   "menu-restaurant-images.json", "menu-open-images.json", "manifest.webmanifest", "assets/logo.png", "assets/app-icon-192.png", "assets/gallery-hero-night.jpg"];
 
@@ -29,11 +29,14 @@ self.addEventListener("activate", event => {
 const networkFirst = async request => {
   const cache = await caches.open(VERSION);
   try {
-    const response = await fetch(request);
+    // The server lets browsers keep scripts and styles for an hour; "no-cache" makes the app check for a newer
+    // copy every time (a quick 304 when nothing changed) so updates reach the tablets straight away.
+    let response = await fetch(request.url, {cache: "no-cache", credentials: "same-origin"});
+    if (request.mode === "navigate" && response.redirected) response = await fetch(request); // pages must not be answered with a followed redirect
     if (response.ok) cache.put(request, response.clone());
     return response;
   } catch (error) {
-    const cached = await cache.match(request, {ignoreSearch: request.mode === "navigate"});
+    const cached = (await cache.match(request)) || (await cache.match(request, {ignoreSearch: true}));
     if (cached) return cached;
     throw error;
   }
