@@ -197,3 +197,10 @@ html[dir=rtl] .menu-toolbar .filters.more-start{-webkit-mask-image:linear-gradie
 html[dir=rtl] .menu-toolbar .filters.more-start.more-end{-webkit-mask-image:linear-gradient(to left,transparent,#000 56px,#000 calc(100% - 56px),transparent);mask-image:linear-gradient(to left,transparent,#000 56px,#000 calc(100% - 56px),transparent)}
 /* Phones: search + My order on one row, categories on their own full-width row */
 @media(max-width:600px){.menu-toolbar{flex-wrap:wrap;gap:10px}.menu-toolbar .drawer-open{order:0}.menu-search,.menu-search:focus-within{flex:1 1 0;min-width:0;order:1}.order-open{flex:0 0 auto;order:2;padding:10px 14px}.menu-toolbar .filters{flex:1 1 100%;order:3}}
+/* Category jump: highlight the section that was jumped to */
+.menu-block.cat-arrive .menu-category-bar{animation:catPulse 1.4s ease}
+.menu-block.cat-arrive .dish-card{animation:cardRise .6s cubic-bezier(.2,.7,.2,1) both}
+.menu-block.cat-arrive .dish-card:nth-child(2){animation-delay:.06s}.menu-block.cat-arrive .dish-card:nth-child(3){animation-delay:.12s}.menu-block.cat-arrive .dish-card:nth-child(4){animation-delay:.18s}.menu-block.cat-arrive .dish-card:nth-child(n+5){animation-delay:.24s}
+@keyframes catPulse{0%{box-shadow:0 0 0 0 rgba(230,174,54,.9);transform:scale(1)}30%{box-shadow:0 0 0 8px rgba(230,174,54,.45);transform:scale(1.012)}100%{box-shadow:0 0 0 16px rgba(230,174,54,0);transform:scale(1)}}
+@keyframes cardRise{from{opacity:.35;transform:translateY(22px)}to{opacity:1;transform:none}}
+@media(prefers-reduced-motion:reduce){.menu-block.cat-arrive .menu-category-bar,.menu-block.cat-arrive .dish-card{animation:none}}

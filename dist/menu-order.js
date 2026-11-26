@@ -271,7 +271,7 @@
   function contactInfo() {
     const s = window.NUZHA_SERVER_CONTENT?.settings || {};
     return {
-      phones: [[T("Restaurant", "المطعم"), s.phone || "013 373 1664"], [T("Restaurant — second line", "المطعم — الخط الثاني"), "013 373 1665"], [T("Mobile", "الجوال"), s.mobile || "050 063 8543"]],
+      phones: [[T("Restaurant", "المطعم"), s.phone || "013 373 1664"],[T("Mobile", "الجوال"), s.mobile || "050 063 8543"]],
       whatsapp: s.whatsapp || "053 003 5292",
       events: s.eventsPhone || "+966 50 190 9933",
       hours: String((lang === "ar" ? s.hoursAr : s.hoursEn) || "").trim() || T("Open daily, 6 AM – 12 AM", "مفتوح يومياً من ٦ صباحاً حتى ١٢ ليلاً"),
